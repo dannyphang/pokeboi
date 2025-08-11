@@ -1,0 +1,14 @@
+:host ::ng-deep {
+  .p-toast {
+    width: 250px;
+
+    .p-toast-message-content {
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+}
+
+.toast-div {
+  gap: var(--content-gap);
+}

@@ -1,0 +1,16 @@
+{
+  "local": {
+    "client": "http://localhost:1200",
+    "base": "http://localhost:1201",
+    "auth": "http://localhost:1110",
+    "log": "http://localhost:1114",
+    "authClient": "http://localhost:1118"
+  },
+  "server": {
+    "client": "https://www.cxi.onl",
+    "base": "https://crm-six-mauve.vercel.app",
+    "auth": "https://jwt-authentication-fawn.vercel.app",
+    "log": "https://log-five-theta.vercel.app",
+    "authClient": "https://jwt-authentication-hnoh.vercel.app"
+  }
+}

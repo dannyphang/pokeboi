@@ -1,0 +1,16 @@
+<div>
+  <div class="poke-div tw-flex tw-flex-wrap tw-gap-[var(--content-gap)]">
+    <p-button [outlined]="true" *ngFor="let pokemon of pokemonList">
+      <div>
+        <div class="pokemon-img">
+          <img
+            [src]="pokemon.sprites.other['official-artwork'].front_default"
+            alt="{{ pokemon.name }}"
+            class="tw-w-full tw-h-full tw-object-cover"
+          />
+        </div>
+        <div class="pokemon-name">{{ pokemon.name }}</div>
+      </div>
+    </p-button>
+  </div>
+</div>
