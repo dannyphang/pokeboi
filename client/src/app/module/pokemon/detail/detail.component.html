@@ -1,1 +1,20 @@
-<p>detail works!</p>
+<div class="detail-container" *ngIf="pokemon">
+  <section
+    class="pokemon-img-sec"
+    [ngStyle]="{
+      'background-color': pokemon.species?.color.name
+    }"
+  >
+    <img
+      [src]="pokemon?.sprites?.other['official-artwork'].front_default"
+      [alt]="pokemon?.name"
+      class="pokemon-img"
+    />
+  </section>
+
+  <section class="pokemon-detail-sec">
+    <div class="pokemon-name">
+      {{ pokemon.name | capitalize }}
+    </div>
+  </section>
+</div>
