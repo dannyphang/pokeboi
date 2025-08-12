@@ -14,7 +14,15 @@ export class PokemonService {
 
     }
 
-    getPokemons(): Observable<ResponseModel<any[]>> {
-        return this.coreService.get<any[]>(this.SERVICE_PATH_URL).pipe();
+    getPokemons(offset: number, limit: number): Observable<ResponseModel<any>> {
+        return this.coreService.get<any>(this.SERVICE_PATH_URL, { headers: { offset: offset, limit: limit } }).pipe();
+    }
+
+    getPokemon(id: string): Observable<ResponseModel<any>> {
+        return this.coreService.get<any>(`${this.SERVICE_PATH_URL}/${id}`).pipe();
+    }
+
+    getTypes(): Observable<ResponseModel<any>> {
+        return this.coreService.get<any>(`${this.SERVICE_PATH_URL}/type`).pipe();
     }
 }

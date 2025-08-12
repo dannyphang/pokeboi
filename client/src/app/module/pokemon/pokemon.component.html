@@ -1,16 +1,61 @@
-<div>
-  <div class="poke-div tw-flex tw-flex-wrap tw-gap-[var(--content-gap)]">
-    <p-button [outlined]="true" *ngFor="let pokemon of pokemonList">
-      <div>
-        <div class="pokemon-img">
-          <img
-            [src]="pokemon.sprites.other['official-artwork'].front_default"
-            alt="{{ pokemon.name }}"
-            class="tw-w-full tw-h-full tw-object-cover"
-          />
-        </div>
-        <div class="pokemon-name">{{ pokemon.name }}</div>
+<div class="pokemon-container">
+  <div class="pokemon-card-div">
+    <div class="pokemon-card">
+      <div class="tw-text-center pokemon-text poke-font">
+        {{ selectedPokemon?.name | capitalize }}
       </div>
-    </p-button>
+
+      <div class="pokemon-img-div" (click)="goInPokemon()">
+        <img
+          *ngIf="selectedPokemon"
+          [src]="
+            selectedPokemon.sprites.other['official-artwork'].front_default
+          "
+          alt="{{ selectedPokemon.name }}"
+          class="pokemon-img"
+          [class.jump]="isJumping"
+        />
+      </div>
+
+      <div
+        class="types-div tw-flex tw-gap-[var(--content-gap)] tw-justify-center"
+      >
+        <div *ngFor="let type of selectedTypes">
+          <app-type-tag
+            [typeName]="type.name"
+            [backgroundColor]="typeColors[type.name]"
+          ></app-type-tag>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    #pokeball
+    class="pokeball"
+    [style.transform]="'translateX(-50%) rotate(' + rotation + 'deg)'"
+    (mousedown)="startRotate($event)"
+    (mousemove)="rotate($event)"
+    (mouseup)="stopRotate()"
+    (touchstart)="startRotateTouch($event)"
+    (touchmove)="rotateTouch($event)"
+    (touchend)="stopRotateTouch()"
+    (touchcancel)="stopRotateTouch()"
+  ></div>
+
+  <div #pokemonListEl class="poke-div">
+    <div
+      class="pokemon-list-card"
+      *ngFor="let pokemon of pokemonList"
+      (click)="selectPokemon(pokemon)"
+      [ngClass]="{
+        'selected-border': selectedPokemon.id === pokemon.id
+      }"
+    >
+      <div class="pokemon-id poke-font">
+        {{ pokemon.id.toString().padStart(3, "0") }}
+      </div>
+      <div class="pokemon-name poke-font">{{ pokemon.name | capitalize }}</div>
+    </div>
   </div>
 </div>

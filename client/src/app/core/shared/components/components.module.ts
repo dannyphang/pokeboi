@@ -33,6 +33,7 @@ import { InputSwitchComponent } from './input-switch/input-switch.component';
 import { EditorComponent } from './editor/editor.component';
 import { OnlyNumberDirective } from '../directives/only-number.directive';
 import { PasswordValidator } from '../directives/password.directive';
+import { TypeTagComponent } from './pokemon/type-tag/type-tag.component';
 
 const components = [
   BaseInputComponent,
@@ -61,6 +62,7 @@ const components = [
   BreadcrumbComponent,
   InputSwitchComponent,
   EditorComponent,
+  TypeTagComponent,
 ];
 
 @NgModule({

@@ -7,11 +7,11 @@ const router = Router();
 
 router.use(express.json());
 
-// get all pokemon
+// pokemon
 router.get("/", async (req, res) => {
     try {
         pokemon
-            .allPokemon()
+            .allPokemon({ offset: func.body(req).headers.offset, limit: func.body(req).headers.limit })
             .then((url) => {
                 res.status(200).json(
                     func.responseModel({
@@ -21,9 +21,9 @@ router.get("/", async (req, res) => {
                     })
                 );
             })
-            .catch((error) => {
+            .catch(async (error) => {
                 console.error("Error retrieving all Pokemon:", error);
-                API.createLog(error, req, res, 500, "pokemon");
+                // await API.createLog(error, req, res, 500, "pokemon");
                 res.status(500).json(
                     func.responseModel({
                         isSuccess: false,
@@ -33,7 +33,54 @@ router.get("/", async (req, res) => {
             });
     } catch (error) {
         console.log("error", error);
-        API.createLog(error, req, res, 500, "pokemon");
+        // await API.createLog(error, req, res, 500, "pokemon");
+        res.status(500).json(
+            func.responseModel({
+                isSuccess: false,
+                responseMessage: error,
+            })
+        );
+    }
+});
+
+// type
+router.get("/type", async (req, res) => {
+    try {
+        const types = await pokemon.getAllTypes();
+        res.status(200).json(
+            func.responseModel({
+                isSuccess: true,
+                responseMessage: "All Pokemon types retrieved successfully",
+                data: types,
+            })
+        );
+    } catch (error) {
+        console.error("Error retrieving Pokemon types:", error);
+        // await API.createLog(error, req, res, 500, "pokemon");
+        res.status(500).json(
+            func.responseModel({
+                isSuccess: false,
+                responseMessage: error,
+            })
+        );
+    }
+});
+
+// pokemon by id
+router.get("/:id", async (req, res) => {
+    try {
+        pokemon.pokemonById(req.params.id).then((pokemon) => {
+            res.status(200).json(
+                func.responseModel({
+                    isSuccess: true,
+                    responseMessage: "Pokemon retrieved successfully",
+                    data: pokemon,
+                })
+            );
+        });
+    } catch (error) {
+        console.error("Error retrieving Pokemon by ID:", error);
+        // await API.createLog(error, req, res, 500, "pokemon");
         res.status(500).json(
             func.responseModel({
                 isSuccess: false,

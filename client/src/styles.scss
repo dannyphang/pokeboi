@@ -14,6 +14,13 @@
 @import "../node_modules/quill/dist/quill.core.css";
 @import "../node_modules/quill/dist/quill.snow.css";
 
+@font-face {
+  font-family: "PokemonFont";
+  src: url("/assets/fonts/pokemon-pixel-font.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
 :root {
   --content-gap: 15px;
   --content-gap-s: 8px;
@@ -26,7 +33,7 @@ html {
 }
 
 body {
-  font-family: var(--font-family);
+  font-family: "PokemonFont", sans-serif;
   background-color: var(--surface-ground);
   color: var(--text-color);
   padding: 0;

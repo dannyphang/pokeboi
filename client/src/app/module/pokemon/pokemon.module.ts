@@ -7,11 +7,14 @@ import { CommonSharedModule } from '../../core/shared/modules/common-shared.modu
 import { MaterialModule } from '../../core/shared/modules/material.module';
 import { PrimeNgModule } from '../../core/shared/modules/primeng.module';
 import { PokemonComponent } from './pokemon.component';
+import { CustomPipesModule } from '../../core/shared/pipe/pipes.module';
+import { DetailComponent } from './detail/detail.component';
 
 
 @NgModule({
   declarations: [
-    PokemonComponent
+    PokemonComponent,
+    DetailComponent,
   ],
   imports: [
     CommonModule,
@@ -19,7 +22,8 @@ import { PokemonComponent } from './pokemon.component';
     CommonSharedModule,
     MaterialModule,
     PrimeNgModule,
-    ComponentsModule
+    ComponentsModule,
+    CustomPipesModule
   ]
 })
 export class PokemonModule { }

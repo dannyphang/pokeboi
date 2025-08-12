@@ -11,7 +11,7 @@ const routes: Routes = [
       {
         path: '',
         loadChildren: () => import('./module/pokemon/pokemon.module').then(m => m.PokemonModule),
-        data: { breadcrumb: '', title: 'Pokemon' }
+        data: { breadcrumb: '', title: 'Pokedex' }
       },
       // {
       //   path: 'contact',

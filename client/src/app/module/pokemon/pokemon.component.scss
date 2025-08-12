@@ -1,0 +1,173 @@
+.pokemon-container {
+  display: grid;
+  grid-template-areas: "pokemonCardDiv pokemonCardDiv" "pokeball pokeDiv";
+  justify-content: center;
+  width: 100%;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 50% 50%;
+  height: calc(100vh - 48px);
+}
+
+.pokemon-card-div {
+  grid-area: pokemonCardDiv;
+  width: 100%;
+  padding: var(--content-gap);
+  justify-content: center;
+  display: grid;
+  grid-template-areas: "pokeCard";
+  grid-template-rows: 100%;
+}
+
+.pokeball {
+  --rotation: 0deg;
+  height: 100%;
+  aspect-ratio: 1/1;
+  border: 5px solid black;
+  border-radius: 50%;
+  background: linear-gradient(to bottom, red 50%, white 50%);
+  position: relative;
+  transform: rotate(var(--rotation));
+  cursor: grab;
+  user-select: none;
+}
+
+/* Black center band */
+.pokeball::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 20px;
+  background: black;
+  transform: translateY(-50%);
+}
+
+/* White button in center */
+.pokeball::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 60px;
+  height: 60px;
+  background: white;
+  border: 5px solid black;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.pokemon-card {
+  grid-area: pokeCard;
+  display: grid;
+  grid-template-areas: "pokemon-text" "pokeImgDiv" "pokeTypes";
+  align-items: center;
+  grid-template-rows: auto 1fr auto;
+  gap: var(--content-gap);
+}
+
+.poke-div {
+  grid-area: pokeDiv;
+  display: grid;
+  gap: var(--content-gap);
+  overflow-y: auto;
+}
+
+.pokemon-list-card {
+  display: grid;
+  grid-template-areas: "pokeId pokeName";
+  grid-template-columns: auto 1fr;
+  gap: var(--content-gap);
+  align-items: center;
+  padding: var(--content-gap-xs);
+  border-radius: 8px;
+  grid-template-rows: 100%;
+}
+
+.pokemon-id {
+  grid-area: pokeId;
+  align-items: center;
+}
+
+.pokemon-img-div {
+  grid-area: pokeImgDiv;
+  grid-template-areas: "pokeImg";
+  height: 100%;
+  aspect-ratio: 1 / 1;
+  display: grid;
+  justify-content: center;
+  position: relative;
+  background: none; /* we'll move the background to the pseudo-element */
+  border-radius: 8px;
+  align-items: center;
+  grid-template-rows: 100%;
+  overflow-y: auto;
+}
+
+.pokemon-img-div::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("/assets/images/gray-pokeball.png");
+  background-size: cover;
+  background-position: center;
+  opacity: 0.2; /* fades only the background */
+  z-index: 0;
+}
+
+.pokemon-img {
+  grid-area: pokeImg;
+  height: 50%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  z-index: 1;
+  position: relative;
+  transition: transform 0.2s ease;
+}
+
+.jump {
+  animation: jump 0.4s ease;
+}
+
+@keyframes jump {
+  0% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-15px);
+  }
+  50% {
+    transform: translateY(0);
+  }
+  70% {
+    transform: translateY(-8px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.pokemon-name {
+  grid-area: pokeName;
+}
+
+.selected-border {
+  border: 2px solid blue;
+}
+
+.poke-font {
+  font-size: 24px;
+}
+
+.types-div {
+  grid-area: pokeTypes;
+}
+
+@media (min-width: 600px) {
+  .pokemon-container {
+    grid-template-areas: "pokeball pokemonCardDiv pokeDiv";
+    grid-template-columns: 30% 40% 30%;
+
+    grid-template-rows: 1fr;
+  }
+}
