@@ -14,6 +14,8 @@ import { RouterModule } from '@angular/router';
 import { PrimeNgModule } from './core/shared/modules/primeng.module';
 import { ComponentsModule } from './core/shared/components/components.module';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { isDevMode } from '@angular/core';
 
 // Configure the translation loader
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -42,4 +44,10 @@ export const imports = [
       deps: [HttpClient]
     }
   }),
+  ServiceWorkerModule.register('ngsw-worker.js', {
+    enabled: !isDevMode(),
+    // Register the ServiceWorker as soon as the application is stable
+    // or after 30 seconds (whichever comes first).
+    registrationStrategy: 'registerWhenStable:30000'
+  })
 ];
