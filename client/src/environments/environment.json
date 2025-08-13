@@ -8,7 +8,7 @@
   },
   "server": {
     "client": "https://www.cxi.onl",
-    "base": "https://pokeboi-server.vercel.app/",
+    "base": "https://pokeboi-server.vercel.app",
     "auth": "https://jwt-authentication-fawn.vercel.app",
     "log": "https://log-five-theta.vercel.app",
     "authClient": "https://jwt-authentication-hnoh.vercel.app"
