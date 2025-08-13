@@ -6,6 +6,8 @@ import { CoreHttpService, ResponseModel } from "./core-http.service";
 @Injectable({ providedIn: 'root' })
 export class PokemonService {
     SERVICE_PATH_URL = 'pokemon'
+    language: string = 'en';
+    version: string;
 
     constructor(
         private http: HttpClient,
@@ -24,5 +26,9 @@ export class PokemonService {
 
     getTypes(): Observable<ResponseModel<any>> {
         return this.coreService.get<any>(`${this.SERVICE_PATH_URL}/type`).pipe();
+    }
+
+    getVersions(): Observable<ResponseModel<any>> {
+        return this.coreService.get<any>(`${this.SERVICE_PATH_URL}/version`).pipe();
     }
 }

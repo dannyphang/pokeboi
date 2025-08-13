@@ -22,6 +22,9 @@
 }
 
 :root {
+  --content-gap-xxxl: 24px;
+  --content-gap-xxl: 20px;
+  --content-gap-l: 18px;
   --content-gap: 15px;
   --content-gap-s: 8px;
   --content-gap-xs: 6px;
@@ -32,15 +35,17 @@
   --font-h4-size: 20px;
   --font-h5-size: 18px;
   --font-h6-size: 16px;
+
+  --font-family: "PokemonFont", sans-serif;
 }
 
 html {
   font-size: 1rem;
   height: 100%;
+  font-family: "PokemonFont", sans-serif !important;
 }
 
 body {
-  font-family: "PokemonFont", sans-serif;
   background-color: var(--surface-ground);
   color: var(--text-color);
   padding: 0;
@@ -48,4 +53,26 @@ body {
   min-height: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.jump {
+  animation: jump 0.4s ease;
+}
+
+@keyframes jump {
+  0% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-15px);
+  }
+  50% {
+    transform: translateY(0);
+  }
+  70% {
+    transform: translateY(-8px);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }

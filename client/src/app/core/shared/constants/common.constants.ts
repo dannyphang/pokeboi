@@ -46,3 +46,12 @@ export const TYPE_COLOR = {
     steel: '#B7B7CE',
     fairy: '#D685AD',
 };
+
+export const STATS_NAME = {
+    hp: 'HP',
+    attack: 'Atk',
+    defense: 'Def',
+    'special-attack': 'Sp. Atk',
+    'special-defense': 'Sp. Def',
+    speed: 'Spd'
+};

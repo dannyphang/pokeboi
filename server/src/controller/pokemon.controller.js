@@ -66,6 +66,42 @@ router.get("/type", async (req, res) => {
     }
 });
 
+// version
+router.get("/version", async (req, res) => {
+    try {
+        pokemon
+            .getAllVersions()
+            .then((version) => {
+                res.status(200).json(
+                    func.responseModel({
+                        isSuccess: true,
+                        responseMessage: "Pokemon version retrieved successfully",
+                        data: version,
+                    })
+                );
+            })
+            .catch((error) => {
+                console.error("Error retrieving Pokemon version:", error);
+                // await API.createLog(error, req, res, 500, "pokemon");
+                res.status(500).json(
+                    func.responseModel({
+                        isSuccess: false,
+                        responseMessage: error,
+                    })
+                );
+            });
+    } catch (error) {
+        console.error("Error retrieving Pokemon games:", error);
+        // await API.createLog(error, req, res, 500, "pokemon");
+        res.status(500).json(
+            func.responseModel({
+                isSuccess: false,
+                responseMessage: error,
+            })
+        );
+    }
+});
+
 // pokemon by id
 router.get("/:id", async (req, res) => {
     try {

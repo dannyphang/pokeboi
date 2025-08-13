@@ -1,5 +1,6 @@
 import * as Poke from "../configuration/pokemonConfig.js";
 import { DEFAULT_OFFSET, DEFAULT_LIMIT } from "../shared/constant.js";
+import axios from "axios";
 
 async function allPokemon({ offset = DEFAULT_OFFSET, limit = DEFAULT_LIMIT }) {
     return new Promise(async (resolve, reject) => {
@@ -63,6 +64,11 @@ async function pokemonById(id) {
         try {
             let pokemon = await Poke.pokedex.getPokemonByName(id);
             pokemon.species = await Poke.pokedex.getPokemonSpeciesByName(pokemon.id);
+            pokemon.type_relational = await Promise.all(
+                pokemon.types.map((type) => {
+                    return getTypeRelations(type.type.name);
+                })
+            );
             resolve(pokemon);
         } catch (error) {
             reject(error);
@@ -70,4 +76,32 @@ async function pokemonById(id) {
     });
 }
 
-export { allPokemon, getAllTypes, pokemonById };
+async function getAllVersions() {
+    return new Promise(async (resolve, reject) => {
+        try {
+            Poke.pokedex
+                .getVersionsList()
+                .then(async (res) => {
+                    resolve(res);
+                })
+                .catch((error) => {
+                    reject(error);
+                });
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+
+async function getTypeRelations(id) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let relations = await Poke.pokedex.getTypeByName(id);
+            resolve(relations);
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+
+export { allPokemon, getAllTypes, pokemonById, getAllVersions, getTypeRelations };

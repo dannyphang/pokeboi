@@ -5,16 +5,178 @@
       'background-color': pokemon.species?.color.name
     }"
   >
-    <img
-      [src]="pokemon?.sprites?.other['official-artwork'].front_default"
-      [alt]="pokemon?.name"
-      class="pokemon-img"
-    />
+    <div class="basic-div">
+      <div class="pokemon-name">
+        {{ pokemon.name | capitalize }}
+      </div>
+      <div class="pokemon-id">
+        #{{ pokemon.id.toString().padStart(3, "0") }}
+      </div>
+      <div class="pokemon-type">
+        <div *ngFor="let type of typeList">
+          <app-type-tag
+            [typeName]="type.name"
+            [backgroundColor]="typeColors[type.name]"
+          ></app-type-tag>
+        </div>
+      </div>
+    </div>
+    <div class="image-div">
+      <img
+        [src]="pokemon?.sprites?.other['official-artwork'].front_default"
+        [alt]="pokemon?.name"
+        class="pokemon-img"
+        [class.jump]="isJumping"
+      />
+    </div>
   </section>
 
-  <section class="pokemon-detail-sec">
+  <div class="detail-body">
+    <p-tabView>
+      <!-- about -->
+      <p-tabPanel header="About">
+        <section class="description-sec">
+          <div class="">
+            {{ pokemon?.species?.flavor_text_entries[0]?.flavor_text }}
+          </div>
+        </section>
+
+        <section></section>
+      </p-tabPanel>
+
+      <!-- base stats -->
+      <p-tabPanel header="Base Stats">
+        <section class="stat-sec">
+          <p-chart
+            type="radar"
+            [data]="chartData"
+            [options]="chartOptions"
+          ></p-chart>
+        </section>
+
+        <section class="type-def-sec">
+          <div class="h2-title">Type Effectiveness</div>
+          <div class="type-effectiveness-div">
+            <div class="super-list-div">
+              <div class="effectiveness-label">Super Effective</div>
+              <div class="right-effectiveness">
+                <div *ngFor="let type of returnTypeEffectiveness(4)">
+                  <app-type-tag
+                    [typeName]="type"
+                    [backgroundColor]="typeColors[type]"
+                  ></app-type-tag>
+                </div>
+              </div>
+            </div>
+            <div class="double-list-div">
+              <div class="effectiveness-label">Double Effective</div>
+              <div class="right-effectiveness">
+                <div *ngFor="let type of returnTypeEffectiveness(2)">
+                  <app-type-tag
+                    [typeName]="type"
+                    [backgroundColor]="typeColors[type]"
+                  ></app-type-tag>
+                </div>
+              </div>
+            </div>
+            <div class="normal-list-div">
+              <div class="effectiveness-label">Normal Effective</div>
+              <div class="right-effectiveness">
+                <div *ngFor="let type of returnTypeEffectiveness(1)">
+                  <app-type-tag
+                    [typeName]="type"
+                    [backgroundColor]="typeColors[type]"
+                  ></app-type-tag>
+                </div>
+              </div>
+            </div>
+            <div class="half-list-div">
+              <div class="effectiveness-label">Half Effective</div>
+              <div class="right-effectiveness">
+                <div *ngFor="let type of returnTypeEffectiveness(0.5)">
+                  <app-type-tag
+                    [typeName]="type"
+                    [backgroundColor]="typeColors[type]"
+                  ></app-type-tag>
+                </div>
+              </div>
+            </div>
+            <div class="zero-list-div">
+              <div class="effectiveness-label">No Effective</div>
+              <div class="right-effectiveness">
+                <div *ngFor="let type of returnTypeEffectiveness(0)">
+                  <app-type-tag
+                    [typeName]="type"
+                    [backgroundColor]="typeColors[type]"
+                  ></app-type-tag>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </p-tabPanel>
+
+      <!-- evolutions -->
+      <p-tabPanel header="Evolutions"></p-tabPanel>
+
+      <!-- moves -->
+      <p-tabPanel header="Moves"></p-tabPanel>
+    </p-tabView>
+  </div>
+
+  <!-- <section class="pokemon-detail-sec">
     <div class="pokemon-name">
       {{ pokemon.name | capitalize }}
     </div>
+
+    <div class="body-detail-div">
+      <div class="tw-gap-[var(--content-gap-s)] tw-grid">
+        <div class="pokemon-label">Type</div>
+        <div class="pokemon-value">
+          <div *ngFor="let type of typeList">
+            <app-type-tag
+              [typeName]="type.name"
+              [backgroundColor]="typeColors[type.name]"
+            ></app-type-tag>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="body-detail-div">
+      <div class="tw-gap-[var(--content-gap-s)] tw-grid">
+        <div class="pokemon-label">Abilities</div>
+        <div class="pokemon-value">
+          <div *ngFor="let ability of abilities">
+            <div
+              [ngStyle]="{
+                border: ability.hidden
+                  ? '1px solid ' + pokemon.species?.color.name
+                  : 'none',
+                padding: ability.hidden ? '4px' : '0'
+              }"
+              class="tw-rounded-lg"
+            >
+              {{ ability.name | capitalize }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="body-detail-div">
+      <div class="tw-gap-[var(--content-gap-s)] tw-grid">
+        <div class="pokemon-label">Weight</div>
+        <div class="pokemon-value">{{ pokemon.weight / 10 }}KG</div>
+      </div>
+      <div class="tw-gap-[var(--content-gap-s)] tw-grid">
+        <div class="pokemon-label">Height</div>
+        <div class="pokemon-value">{{ pokemon.height / 10 }}M</div>
+      </div>
+    </div>
   </section>
+
+  <section class="stat-sec">
+    <p-chart type="radar" [data]="chartData" [options]="chartOptions"></p-chart>
+  </section> -->
 </div>
