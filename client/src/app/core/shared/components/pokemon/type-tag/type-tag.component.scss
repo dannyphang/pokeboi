@@ -5,3 +5,16 @@
   color: white;
   font-weight: bold;
 }
+
+.type-tag-icon {
+  border-radius: 999px;
+  display: flex;
+  padding: var(--content-gap-xs);
+  aspect-ratio: 1/1;
+  height: 100%;
+}
+
+.type-icon {
+  width: 100%;
+  aspect-ratio: 1/1;
+}

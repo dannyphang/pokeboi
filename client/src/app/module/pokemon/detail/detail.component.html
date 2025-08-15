@@ -22,12 +22,22 @@
       </div>
     </div>
     <div class="image-div">
+      <app-base-button
+        [iconName]="'pi pi-angle-left'"
+        [isTextStyle]="true"
+        (onClick)="prevPokemon()"
+      ></app-base-button>
       <img
         [src]="pokemon?.sprites?.other['official-artwork'].front_default"
         [alt]="pokemon?.name"
         class="pokemon-img"
         [class.jump]="isJumping"
       />
+      <app-base-button
+        [iconName]="'pi pi-angle-right'"
+        [isTextStyle]="true"
+        (onClick)="nextPokemon()"
+      ></app-base-button>
     </div>
   </section>
 
@@ -60,6 +70,7 @@
             <div class="super-list-div">
               <div class="effectiveness-label">Super Effective</div>
               <div class="right-effectiveness">
+                <div *ngIf="returnTypeEffectiveness(4).length === 0">--</div>
                 <div *ngFor="let type of returnTypeEffectiveness(4)">
                   <app-type-tag
                     [typeName]="type"
@@ -71,6 +82,7 @@
             <div class="double-list-div">
               <div class="effectiveness-label">Double Effective</div>
               <div class="right-effectiveness">
+                <div *ngIf="returnTypeEffectiveness(2).length === 0">--</div>
                 <div *ngFor="let type of returnTypeEffectiveness(2)">
                   <app-type-tag
                     [typeName]="type"
@@ -82,6 +94,7 @@
             <div class="normal-list-div">
               <div class="effectiveness-label">Normal Effective</div>
               <div class="right-effectiveness">
+                <div *ngIf="returnTypeEffectiveness(1).length === 0">--</div>
                 <div *ngFor="let type of returnTypeEffectiveness(1)">
                   <app-type-tag
                     [typeName]="type"
@@ -93,6 +106,7 @@
             <div class="half-list-div">
               <div class="effectiveness-label">Half Effective</div>
               <div class="right-effectiveness">
+                <div *ngIf="returnTypeEffectiveness(0.5).length === 0">--</div>
                 <div *ngFor="let type of returnTypeEffectiveness(0.5)">
                   <app-type-tag
                     [typeName]="type"
@@ -104,6 +118,7 @@
             <div class="zero-list-div">
               <div class="effectiveness-label">No Effective</div>
               <div class="right-effectiveness">
+                <div *ngIf="returnTypeEffectiveness(0).length === 0">--</div>
                 <div *ngFor="let type of returnTypeEffectiveness(0)">
                   <app-type-tag
                     [typeName]="type"
@@ -120,7 +135,63 @@
       <p-tabPanel header="Evolutions"></p-tabPanel>
 
       <!-- moves -->
-      <p-tabPanel header="Moves"></p-tabPanel>
+      <p-tabPanel header="Moves">
+        <section class="move-sec">
+          <!-- search bar -->
+          <app-base-input
+            [fieldControl]="searchMoveFormControl"
+            [iconRightStyle]="'pi pi-search'"
+          ></app-base-input>
+
+          <!-- list -->
+          <div *ngFor="let move of displayMoveList; let i = index">
+            <div
+              class="move-div"
+              [style.border-top]="
+                i !== 0 ? '1px solid ' + pokemon.species.color.name : 'none'
+              "
+            >
+              <div class="move-basic">
+                <div class="move-name">{{ returnMoveNameByLang(move) }}</div>
+                <div class="move-desc">{{ returnMoveDescByLang(move) }}</div>
+              </div>
+              <div class="move-stat">
+                <div class="move-power">{{ move.power ?? "--" }}</div>
+                <p-divider layout="vertical"></p-divider>
+                <div class="move-accuracy">{{ move.accuracy ?? "--" }}</div>
+                <p-divider layout="vertical"></p-divider>
+                <div class="move-pp">{{ move.pp ?? "--" }}</div>
+              </div>
+              <div class="move-skill-div">
+                <app-type-tag
+                  class="move-type-tag"
+                  [typeName]="move.type.name"
+                  [backgroundColor]="typeColors[move.type.name]"
+                  [isIcon]="true"
+                ></app-type-tag>
+                <div class="move-category-div">
+                  <div
+                    class="move-category"
+                    [style.background]="
+                      returnCatColorByName(move.damage_class.name)
+                    "
+                  >
+                    <img
+                      [src]="
+                        'assets/icons/category/' +
+                        move.damage_class.name +
+                        '.png'
+                      "
+                      alt="{{ move.damage_class.name }} icon"
+                      class="move-category-icon"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </p-tabPanel>
     </p-tabView>
   </div>
 

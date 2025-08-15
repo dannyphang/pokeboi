@@ -17,6 +17,8 @@ export class BaseButtonComponent
   @Input() iconName: string = '';
   @Input() type: 'normal' | 'split' = 'normal';
   @Input() buttonType: 'button' | 'submit' = 'button';
+  @Input() isTextStyle: boolean = false;
+  @Input() rounded: boolean = false;
   @Input() splitButtonItems: {
     label: string;
     icon?: string;
@@ -28,6 +30,12 @@ export class BaseButtonComponent
   @Input() createdBy?: string;
   @Input() moduleCode?: any;
   @Input() buttonClass: string;
+  @Input() buttonStyleClass: string;
+  @Input() loading: boolean = false;
+  @Input() raised: boolean = false;
+  @Input() isSpinning: boolean = false;
+  @Input() severity: 'primary' | 'secondary' = 'primary';
+
   constructor() {
     super();
   }

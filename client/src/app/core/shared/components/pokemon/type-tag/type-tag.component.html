@@ -1,6 +1,19 @@
 <div
   class="poke-font type-tag tw-shadow-lg"
   [style.background]="backgroundColor"
+  *ngIf="!isIcon"
 >
   {{ typeName.toString().toUpperCase() }}
+</div>
+
+<div
+  class="poke-font tw-shadow-lg type-tag-icon"
+  [style.background]="backgroundColor"
+  *ngIf="isIcon"
+>
+  <img
+    [src]="getTypeIcon(typeName)"
+    alt="{{ typeName }} icon"
+    class="type-icon"
+  />
 </div>

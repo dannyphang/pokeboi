@@ -7,7 +7,7 @@ import { CoreHttpService, ResponseModel } from "./core-http.service";
 export class PokemonService {
     SERVICE_PATH_URL = 'pokemon'
     language: string = 'en';
-    version: string;
+    version: string = 'diamond-pearl';
 
     constructor(
         private http: HttpClient,
@@ -21,7 +21,7 @@ export class PokemonService {
     }
 
     getPokemon(id: string): Observable<ResponseModel<any>> {
-        return this.coreService.get<any>(`${this.SERVICE_PATH_URL}/${id}`).pipe();
+        return this.coreService.get<any>(`${this.SERVICE_PATH_URL}/detail/${id}`).pipe();
     }
 
     getTypes(): Observable<ResponseModel<any>> {
@@ -30,5 +30,9 @@ export class PokemonService {
 
     getVersions(): Observable<ResponseModel<any>> {
         return this.coreService.get<any>(`${this.SERVICE_PATH_URL}/version`).pipe();
+    }
+
+    getMoves(id: string): Observable<ResponseModel<any>> {
+        return this.coreService.get<any>(`${this.SERVICE_PATH_URL}/move/${id}`).pipe();
     }
 }

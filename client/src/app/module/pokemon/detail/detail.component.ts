@@ -1,9 +1,10 @@
 import { Component, Inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PokemonService } from '../../../core/services/pokemon.service';
 import { Title } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
 import { STATS_NAME, TYPE_COLOR } from '../../../core/shared/constants/common.constants';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-detail',
@@ -22,7 +23,10 @@ export class DetailComponent {
   statsNames = STATS_NAME
   versionList: string[] = [];
   typeRelationalList: any;
+  moveList: any[] = [];
+  displayMoveList: any[] = [];
 
+  searchMoveFormControl: FormControl = new FormControl('');
   isJumping = false;
 
   constructor(
@@ -30,48 +34,76 @@ export class DetailComponent {
     private activatedRoute: ActivatedRoute,
     private pokemonService: PokemonService,
     private titleService: Title,
+    private router: Router
   ) {
-    if (this.activatedRoute.snapshot.queryParamMap) {
-      this.pokemonId = this.activatedRoute.snapshot.paramMap.get('id');
-      this.pokemonService.getPokemon(this.pokemonId!).subscribe({
-        next: (res) => {
-          this.pokemon = res.data;
+  }
 
-          // Trigger jump after 1 second
-          setTimeout(() => {
-            this.isJumping = true;
+  ngOnInit() {
+    this.activatedRoute.paramMap.subscribe(params => {
+      this.pokemonId = params.get('id');
+      if (this.pokemonId) {
+        this.loadPokemon(this.pokemonId);
+      }
+    });
 
-            // Remove the class after animation ends (so it can be retriggered)
-            setTimeout(() => {
-              this.isJumping = false;
-            }, 400); // match animation duration
-          }, 100);
-
-          // set title
-          this.titleService.setTitle(this.pokemon.name.charAt(0).toUpperCase() + this.pokemon.name.slice(1));
-
-          // set icon
-          this.setFavicon(this.pokemon.sprites.front_default);
-
-          // set type
-          this.loadTypes();
-
-          // set abilities
-          this.setAbilities();
-
-          // set stat
-          this.setStat();
-
-          // set versions
-          this.loadVersionList();
-
-          console.log(this.pokemon)
-        },
-        error: () => {
-          console.error('Error loading Pokemon details');
-        }
+    this.searchMoveFormControl.valueChanges.subscribe(value => {
+      this.displayMoveList = this.moveList.filter(move => {
+        const moveName = this.returnMoveNameByLang(move);
+        return moveName.toLowerCase().includes(value.toLowerCase());
       });
-    }
+    })
+  }
+
+  loadPokemon(pokemonId: string) {
+    this.pokemonService.getPokemon(pokemonId).subscribe({
+      next: (res) => {
+        this.pokemon = res.data;
+
+        // Trigger jump after 1 second
+        setTimeout(() => {
+          this.isJumping = true;
+
+          // Remove the class after animation ends (so it can be retriggered)
+          setTimeout(() => {
+            this.isJumping = false;
+          }, 400); // match animation duration
+        }, 100);
+
+        // set title
+        this.titleService.setTitle(this.pokemon.name.charAt(0).toUpperCase() + this.pokemon.name.slice(1));
+
+        // set icon
+        this.setFavicon(this.pokemon.sprites.front_default);
+
+        // set type
+        this.loadTypes();
+
+        // set abilities
+        this.setAbilities();
+
+        // set stat
+        this.setStat();
+
+        // set versions
+        this.loadVersionList();
+
+        // load moves
+        this.loadMoves();
+
+        console.log(this.pokemon)
+      },
+      error: () => {
+        console.error('Error loading Pokemon details');
+      }
+    });
+  }
+
+  prevPokemon() {
+    this.router.navigate(['/pokemon', this.pokemon.id - 1]);
+  }
+
+  nextPokemon() {
+    this.router.navigate(['/pokemon', this.pokemon.id + 1]);
   }
 
   setFavicon(iconUrl: string) {
@@ -233,5 +265,43 @@ export class DetailComponent {
         console.error('Error loading Pokemon versions');
       },
     });
+  }
+
+  loadMoves() {
+    if (this.pokemonId) {
+      this.pokemonService.getMoves(this.pokemonId).subscribe({
+        next: (res) => {
+          this.moveList = res.data;
+          this.displayMoveList = res.data;
+        },
+        error: () => {
+          console.error('Error loading Pokemon moves');
+        },
+      });
+    }
+  }
+
+  returnMoveNameByLang(move: any): string {
+    const langEntry = move.names.find((name: any) => name.language.name === this.pokemonService.language);
+    return langEntry ? langEntry.name : move.names[0].name;
+  }
+
+  returnMoveDescByLang(move: any): string {
+    const langEntry = move.flavor_text_entries.find((entry: any) => entry.language.name === this.pokemonService.language);
+    return langEntry ? langEntry.flavor_text : move.flavor_text_entries[0].flavor_text;
+  }
+
+  returnCatColorByName(carName: string): string {
+    switch (carName) {
+      case 'physical':
+        return '#ff0000'; // red
+      case 'special':
+        return '#0000ff'; // blue
+      case 'status':
+        return '#00ff00'; // green
+      default:
+        return '#000000'; // black for unknown categories
+    }
+
   }
 }
