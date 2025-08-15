@@ -1,7 +1,8 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, Inject, ViewChild } from '@angular/core';
 import { PokemonService } from '../../core/services/pokemon.service';
 import { DEFAULT_LIMIT, DEFAULT_OFFSET, TYPE_COLOR } from '../../core/shared/constants/common.constants';
 import { Router } from '@angular/router';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'app-pokemon',
@@ -31,13 +32,41 @@ export class PokemonComponent {
   selectedTypes: any[] = [];
 
   constructor(
+    @Inject(DOCUMENT) private document: Document,
     private pokemonService: PokemonService,
     private router: Router
   ) { }
 
   ngOnInit(): void {
+    this.setFavicon("favicon.ico"); // Set default favicon
     this.loadPokemon();
     this.loadTypes();
+  }
+
+  setFavicon(iconUrl: string) {
+    const canvas = document.createElement('canvas');
+    const size = 128; // Try 32, 48, 64
+    canvas.width = size;
+    canvas.height = size;
+
+    const ctx = canvas.getContext('2d')!;
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.src = iconUrl;
+
+    img.onload = () => {
+      // Draw image in center of larger canvas
+      const offset = (size - img.width) / 2;
+      ctx.drawImage(img, offset, offset);
+
+      let link: HTMLLinkElement | null = this.document.querySelector("link[rel*='icon']");
+      if (!link) {
+        link = this.document.createElement('link');
+        link.rel = 'icon';
+        this.document.head.appendChild(link);
+      }
+      link.href = canvas.toDataURL('image/png');
+    };
   }
 
   loadPokemon(): void {
