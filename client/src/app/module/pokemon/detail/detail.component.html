@@ -6,10 +6,26 @@
     }"
   >
     <div class="basic-div">
-      <div class="pokemon-name">
+      <div
+        class="pokemon-name"
+        [style.color]="
+          pokemon.species?.color.name === 'white' ||
+          pokemon.species?.color.name === 'yellow'
+            ? 'black'
+            : 'white'
+        "
+      >
         {{ pokemon.name | capitalize }}
       </div>
-      <div class="pokemon-id">
+      <div
+        class="pokemon-id"
+        [style.color]="
+          pokemon.species?.color.name === 'white' ||
+          pokemon.species?.color.name === 'yellow'
+            ? 'black'
+            : 'white'
+        "
+      >
         #{{ pokemon.id.toString().padStart(3, "0") }}
       </div>
       <div class="pokemon-type">
@@ -26,6 +42,7 @@
         [iconName]="'pi pi-angle-left'"
         [isTextStyle]="true"
         (onClick)="prevPokemon()"
+        [rounded]="true"
       ></app-base-button>
       <img
         [src]="pokemon?.sprites?.other['official-artwork'].front_default"
@@ -37,6 +54,7 @@
         [iconName]="'pi pi-angle-right'"
         [isTextStyle]="true"
         (onClick)="nextPokemon()"
+        [rounded]="true"
       ></app-base-button>
     </div>
   </section>

@@ -21,7 +21,7 @@
 .basic-div {
   display: grid;
   grid-template-areas: "pokemon-name" "pokemon-id" "pokemon-type";
-  grid-template-columns: 50% 50%;
+  grid-template-columns: 80% 20%;
   grid-template-rows: 50% 50%;
   align-items: center;
   height: 100%;

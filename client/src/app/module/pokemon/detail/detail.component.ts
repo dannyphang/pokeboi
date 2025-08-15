@@ -16,6 +16,7 @@ export class DetailComponent {
   pokemon: any;
   typeList: any[] = [];
   typeColors = TYPE_COLOR;
+  allTypes: any[] = [];
   abilities: any[] = [];
   chartData: any;
   chartOptions: any;
@@ -139,6 +140,8 @@ export class DetailComponent {
           this.pokemon.types.some(t => t.type.name === type.name)
         ) || [];
 
+        this.allTypes = res.data.map(type => type.name);
+        this.allTypes = this.allTypes.filter(type => type !== 'unknown' && type !== 'shadow' && type !== 'stellar');
         this.calculateTypeRelational();
       },
       error: () => {
@@ -195,11 +198,18 @@ export class DetailComponent {
     if (!this.typeRelationalList) {
       return [];
     }
-    return Object.entries(this.typeRelationalList)
-      .filter(([type, multiplier]) => multiplier === effectiveness)
-      .map(([type]) => type);
-  }
 
+    return this.allTypes.filter(type => {
+      const multiplier = this.typeRelationalList[type];
+
+      if (effectiveness === 1) {
+        // If the type is missing → assume 1
+        return multiplier === 1 || multiplier === undefined;
+      }
+
+      return multiplier === effectiveness;
+    });
+  }
   setAbilities() {
     this.abilities = this.pokemon.abilities.map(ability => {
       return { name: ability.ability.name, hidden: ability.is_hidden };
