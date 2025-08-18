@@ -15,7 +15,6 @@
         [rounded]="rounded"
         [ngClass]="{
           'border-none': !outlined,
-          'bg-red-400': color === 'red',
           oneline: labelOneLine
         }"
         [disabled]="disabled"
@@ -23,6 +22,7 @@
         [loading]="loading"
         [raised]="raised"
         [styleClass]="buttonStyleClass"
+        [style]="{ color: color }"
       >
         <img
           class="h-1rem w-1rem"
@@ -40,7 +40,6 @@
         class="split-button-item"
         [ngClass]="{
           outlined: outlined,
-          'bg-red-400': color === 'red'
         }"
         [disabled]="disabled"
         [model]="splitButtonItems"

@@ -11,7 +11,7 @@ export class BaseButtonComponent
   extends BaseFieldControlComponent
   implements OnInit {
   @Input() outlined!: boolean;
-  @Input() color: 'normal' | 'red' | 'yellow' | 'green' = 'normal';
+  @Input() color: string = 'primary';
   @Input() iconUrl!: string;
   @Input() rightIcon: boolean = false;
   @Input() iconName: string = '';

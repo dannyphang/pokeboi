@@ -29,6 +29,7 @@ export class DetailComponent {
 
   searchMoveFormControl: FormControl = new FormControl('');
   isJumping = false;
+  fontColor: string = 'white';
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
@@ -60,15 +61,13 @@ export class DetailComponent {
       next: (res) => {
         this.pokemon = res.data;
 
-        // Trigger jump after 1 second
-        setTimeout(() => {
-          this.isJumping = true;
-
-          // Remove the class after animation ends (so it can be retriggered)
-          setTimeout(() => {
-            this.isJumping = false;
-          }, 400); // match animation duration
-        }, 100);
+        // set font color
+        if (this.pokemon.species?.color.name === 'white' || this.pokemon.species?.color.name === 'yellow') {
+          this.fontColor = 'black';
+        }
+        else {
+          this.fontColor = 'white';
+        }
 
         // set title
         this.titleService.setTitle(this.pokemon.name.charAt(0).toUpperCase() + this.pokemon.name.slice(1));
@@ -91,7 +90,17 @@ export class DetailComponent {
         // load moves
         this.loadMoves();
 
-        console.log(this.pokemon)
+        console.log(this.pokemon);
+
+        // Trigger jump after 1 second
+        setTimeout(() => {
+          this.isJumping = true;
+
+          // Remove the class after animation ends (so it can be retriggered)
+          setTimeout(() => {
+            this.isJumping = false;
+          }, 400); // match animation duration
+        }, 100);
       },
       error: () => {
         console.error('Error loading Pokemon details');

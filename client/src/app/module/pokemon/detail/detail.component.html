@@ -6,26 +6,10 @@
     }"
   >
     <div class="basic-div">
-      <div
-        class="pokemon-name"
-        [style.color]="
-          pokemon.species?.color.name === 'white' ||
-          pokemon.species?.color.name === 'yellow'
-            ? 'black'
-            : 'white'
-        "
-      >
+      <div class="pokemon-name" [style.color]="fontColor">
         {{ pokemon.name | capitalize }}
       </div>
-      <div
-        class="pokemon-id"
-        [style.color]="
-          pokemon.species?.color.name === 'white' ||
-          pokemon.species?.color.name === 'yellow'
-            ? 'black'
-            : 'white'
-        "
-      >
+      <div class="pokemon-id" [style.color]="fontColor">
         #{{ pokemon.id.toString().padStart(3, "0") }}
       </div>
       <div class="pokemon-type">
@@ -43,6 +27,7 @@
         [isTextStyle]="true"
         (onClick)="prevPokemon()"
         [rounded]="true"
+        [color]="fontColor"
       ></app-base-button>
       <img
         [src]="pokemon?.sprites?.other['official-artwork'].front_default"
@@ -55,6 +40,7 @@
         [isTextStyle]="true"
         (onClick)="nextPokemon()"
         [rounded]="true"
+        [color]="fontColor"
       ></app-base-button>
     </div>
   </section>
