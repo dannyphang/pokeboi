@@ -1,0 +1,20 @@
+<div class="pokemon-setting-div">
+  <app-base-button
+    [outlined]="true"
+    [rounded]="true"
+    [iconName]="'pi pi-cog'"
+    [buttonStyleClass]="'tw-bg-white'"
+    (onClick)="isDialogVisible = true"
+  ></app-base-button>
+</div>
+
+<p-dialog
+  [(visible)]="isDialogVisible"
+  [styleClass]="'tw-w-[90vw]'"
+  [showHeader]="false"
+  [modal]="true"
+  [draggable]="true"
+  [dismissableMask]="true"
+>
+  <app-base-form [formConfig]="formConfig"></app-base-form>
+</p-dialog>

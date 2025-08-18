@@ -4,7 +4,8 @@ import { PokemonService } from '../../../core/services/pokemon.service';
 import { Title } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
 import { STATS_NAME, TYPE_COLOR } from '../../../core/shared/constants/common.constants';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-detail',
@@ -26,7 +27,13 @@ export class DetailComponent {
   typeRelationalList: any;
   moveList: any[] = [];
   displayMoveList: any[] = [];
+  evolutionChain: any[] = [];
+  desc$ = new BehaviorSubject<string>('');
 
+  settingFormGroup = new FormGroup({
+    version: new FormControl(''),
+    language: new FormControl('')
+  })
   searchMoveFormControl: FormControl = new FormControl('');
   isJumping = false;
   fontColor: string = 'white';
@@ -53,13 +60,25 @@ export class DetailComponent {
         const moveName = this.returnMoveNameByLang(move);
         return moveName.toLowerCase().includes(value.toLowerCase());
       });
-    })
+    });
+
+    this.pokemonService.versionEvent$.subscribe((version: string) => {
+      this.settingFormGroup.controls.version.setValue(version);
+      this.updateDesc();
+    });
+
+    this.pokemonService.languageEvent$.subscribe((language: string) => {
+      this.settingFormGroup.controls.language.setValue(language);
+      this.updateDesc();
+    });
   }
 
   loadPokemon(pokemonId: string) {
     this.pokemonService.getPokemon(pokemonId).subscribe({
       next: (res) => {
         this.pokemon = res.data;
+
+        this.pokemonService.pokemonEvents = this.pokemon;
 
         // set font color
         if (this.pokemon.species?.color.name === 'white' || this.pokemon.species?.color.name === 'yellow') {
@@ -84,28 +103,34 @@ export class DetailComponent {
         // set stat
         this.setStat();
 
-        // set versions
-        this.loadVersionList();
-
         // load moves
         this.loadMoves();
 
-        console.log(this.pokemon);
+        // load evolution chain
+        this.loadEvolutionChain();
 
-        // Trigger jump after 1 second
-        setTimeout(() => {
-          this.isJumping = true;
-
-          // Remove the class after animation ends (so it can be retriggered)
-          setTimeout(() => {
-            this.isJumping = false;
-          }, 400); // match animation duration
-        }, 100);
+        this.pokemonImageClicked();
       },
       error: () => {
         console.error('Error loading Pokemon details');
       }
     });
+  }
+
+  pokemonImageClicked() {
+    // Trigger jump after 1 second
+    setTimeout(() => {
+      this.isJumping = true;
+      let audio = new Audio(this.pokemon.cries.latest);
+      audio.volume = 0.05;
+      audio.play().catch(error => {
+        console.error('Error playing audio:', error);
+      });
+      // Remove the class after animation ends (so it can be retriggered)
+      setTimeout(() => {
+        this.isJumping = false;
+      }, 400); // match animation duration
+    }, 100);
   }
 
   prevPokemon() {
@@ -199,7 +224,6 @@ export class DetailComponent {
       multipliers[attackType] = multiplier;
     });
 
-    console.log(multipliers)
     return multipliers;
   }
 
@@ -219,6 +243,7 @@ export class DetailComponent {
       return multiplier === effectiveness;
     });
   }
+
   setAbilities() {
     this.abilities = this.pokemon.abilities.map(ability => {
       return { name: ability.ability.name, hidden: ability.is_hidden };
@@ -275,17 +300,6 @@ export class DetailComponent {
     }
   }
 
-  loadVersionList() {
-    this.pokemonService.getVersions().subscribe({
-      next: (res) => {
-        this.versionList = res.data.results.map(version => version.name);
-      },
-      error: () => {
-        console.error('Error loading Pokemon versions');
-      },
-    });
-  }
-
   loadMoves() {
     if (this.pokemonId) {
       this.pokemonService.getMoves(this.pokemonId).subscribe({
@@ -298,6 +312,15 @@ export class DetailComponent {
         },
       });
     }
+  }
+
+  updateDesc() {
+    const desc = this.pokemon?.species?.flavor_text_entries.find((entry: any) =>
+      entry.language.name === this.settingFormGroup.controls.language.value &&
+      entry.version.name === this.settingFormGroup.controls.version.value
+    )?.flavor_text ?? '';
+
+    this.desc$.next(desc);
   }
 
   returnMoveNameByLang(move: any): string {
@@ -322,5 +345,22 @@ export class DetailComponent {
         return '#000000'; // black for unknown categories
     }
 
+  }
+
+  loadEvolutionChain() {
+    this.pokemonService.getEvolutionChain(this.pokemon?.species?.evolution_chain?.url).subscribe({
+      next: (res) => {
+        this.evolutionChain = res.data;
+      },
+      error: () => {
+        this.evolutionChain = [];
+      },
+    });
+  }
+
+  gotoPokemon(pokemonId: string) {
+    if (pokemonId) {
+      this.router.navigate(['/pokemon', pokemonId]);
+    }
   }
 }

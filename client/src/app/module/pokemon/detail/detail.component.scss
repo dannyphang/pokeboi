@@ -1,3 +1,4 @@
+//#region main
 .detail-container {
   height: calc(100vh - 48px);
   overflow-y: auto;
@@ -116,6 +117,9 @@
   font-size: var(--font-h2-size);
 }
 
+//#endregion evolution
+
+// #region type effectiveness
 .type-effectiveness-div {
   display: grid;
   grid-template-areas: "super-list-div" "double-list-div" "normal-list-div" "half-list-div" "zero-list-div";
@@ -152,6 +156,9 @@
   //   flex-direction: column;
 }
 
+//#endregion type effectiveness
+
+// #region moves
 .move-div {
   border: 0;
   display: grid;
@@ -229,3 +236,85 @@
   aspect-ratio: 1/1;
   padding: var(--content-gap-xs);
 }
+//#endregion moves
+
+//#region evolution
+.evolution-chain {
+  display: grid;
+}
+
+.evolution-chain-item {
+  display: grid;
+  grid-template-areas: "trigger-div" "evolution-image-div";
+  grid-template-columns: 100%;
+}
+
+.trigger-div {
+  display: grid;
+  grid-template-areas: "evolution-arrow-down evolution-trigger-level";
+  gap: var(--content-gap);
+  justify-content: center;
+  padding: var(--content-gap) 0;
+}
+
+.evolution-image-div {
+  display: grid;
+  grid-template-areas: "pokemon-evolution-image-div" "evolution-name-div";
+  gap: var(--content-gap);
+  grid-template-columns: 100%;
+  border-radius: var(--border-radius);
+  margin: auto;
+  width: 80%;
+  position: relative;
+}
+
+.evolution-image-div::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: var(--poke-color);
+  background-size: cover;
+  background-position: center;
+  opacity: 0.4; /* fades only the background */
+  z-index: 0;
+  border-radius: var(--border-radius);
+}
+
+.pokemon-evolution-image-div {
+  display: grid;
+  z-index: 1;
+}
+
+.pokemon-evolution-image {
+  aspect-ratio: 1/1;
+  width: 40%;
+  object-fit: cover;
+  margin: auto;
+}
+
+.evolution-name-div {
+  display: flex;
+  justify-content: center;
+  margin: 0 auto var(--content-gap);
+  padding: var(--content-gap-xs);
+  position: relative;
+  border-radius: var(--border-radius);
+}
+
+.evolution-name-div::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: var(--poke-color);
+  background-size: cover;
+  background-position: center;
+  opacity: 0.7; /* fades only the background */
+  z-index: 0;
+  border-radius: var(--border-radius);
+}
+
+.evolution-name {
+  z-index: 1;
+}
+
+//#endregion evolution

@@ -1,0 +1,10 @@
+.pokemon-setting-div {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  z-index: 1000;
+}
+
+::ng-deep .p-dialog-content {
+  border-radius: 15px;
+}

@@ -7,7 +7,7 @@ const httpLog = axios.create({
 
 function createLog(error, req, res, statusCode, module) {
     const errorDetails = {
-        project: "CRM",
+        project: "Pokeboi",
         module: module,
         server: "Server API",
         serverType: "API",

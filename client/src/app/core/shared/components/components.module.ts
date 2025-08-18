@@ -34,6 +34,7 @@ import { EditorComponent } from './editor/editor.component';
 import { OnlyNumberDirective } from '../directives/only-number.directive';
 import { PasswordValidator } from '../directives/password.directive';
 import { TypeTagComponent } from './pokemon/type-tag/type-tag.component';
+import { PokemonSettingComponent } from './pokemon/pokemon-setting/pokemon-setting.component';
 
 const components = [
   BaseInputComponent,
@@ -63,6 +64,7 @@ const components = [
   InputSwitchComponent,
   EditorComponent,
   TypeTagComponent,
+  PokemonSettingComponent,
 ];
 
 @NgModule({

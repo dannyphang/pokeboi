@@ -34,6 +34,7 @@
         [alt]="pokemon?.name"
         class="pokemon-img"
         [class.jump]="isJumping"
+        (click)="pokemonImageClicked()"
       />
       <app-base-button
         [iconName]="'pi pi-angle-right'"
@@ -51,7 +52,7 @@
       <p-tabPanel header="About">
         <section class="description-sec">
           <div class="">
-            {{ pokemon?.species?.flavor_text_entries[0]?.flavor_text }}
+            {{ desc$ | async }}
           </div>
         </section>
 
@@ -136,7 +137,58 @@
       </p-tabPanel>
 
       <!-- evolutions -->
-      <p-tabPanel header="Evolutions"></p-tabPanel>
+      <p-tabPanel header="Evolutions">
+        <section class="evolution-sec">
+          <div class="evolution-chain">
+            <div
+              class="evolution-chain-item"
+              *ngFor="let evolution of evolutionChain; let i = index"
+            >
+              <div
+                class="trigger-div"
+                *ngIf="evolution.trigger || evolution.min_level"
+              >
+                <div class="evolution-arrow-down pi pi-arrow-down"></div>
+                <div class="evolution-trigger-level">
+                  Level {{ evolution.min_level }}
+                </div>
+              </div>
+              <div
+                class="evolution-image-div"
+                [style.--poke-color]="evolution.pokemon.species?.color?.name"
+                (click)="gotoPokemon(evolution.pokemon.id)"
+              >
+                <div class="pokemon-evolution-image-div">
+                  <img
+                    [src]="
+                      evolution?.pokemon.sprites?.other['official-artwork']
+                        .front_default
+                    "
+                    [alt]="evolution.pokemon.name"
+                    class="pokemon-evolution-image"
+                  />
+                </div>
+                <div
+                  class="evolution-name-div"
+                  [style.backgroundColor]="
+                    evolution.pokemon.species?.color.name
+                  "
+                >
+                  <div
+                    class="evolution-name"
+                    [style.color]="fontColor"
+                    [style.fontWeight]="
+                      evolution.pokemon.id === pokemon.id ? 'bold' : 'normal'
+                    "
+                  >
+                    {{ evolution.pokemon.name | capitalize }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </p-tabPanel>
 
       <!-- moves -->
       <p-tabPanel header="Moves">
@@ -198,60 +250,4 @@
       </p-tabPanel>
     </p-tabView>
   </div>
-
-  <!-- <section class="pokemon-detail-sec">
-    <div class="pokemon-name">
-      {{ pokemon.name | capitalize }}
-    </div>
-
-    <div class="body-detail-div">
-      <div class="tw-gap-[var(--content-gap-s)] tw-grid">
-        <div class="pokemon-label">Type</div>
-        <div class="pokemon-value">
-          <div *ngFor="let type of typeList">
-            <app-type-tag
-              [typeName]="type.name"
-              [backgroundColor]="typeColors[type.name]"
-            ></app-type-tag>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="body-detail-div">
-      <div class="tw-gap-[var(--content-gap-s)] tw-grid">
-        <div class="pokemon-label">Abilities</div>
-        <div class="pokemon-value">
-          <div *ngFor="let ability of abilities">
-            <div
-              [ngStyle]="{
-                border: ability.hidden
-                  ? '1px solid ' + pokemon.species?.color.name
-                  : 'none',
-                padding: ability.hidden ? '4px' : '0'
-              }"
-              class="tw-rounded-lg"
-            >
-              {{ ability.name | capitalize }}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="body-detail-div">
-      <div class="tw-gap-[var(--content-gap-s)] tw-grid">
-        <div class="pokemon-label">Weight</div>
-        <div class="pokemon-value">{{ pokemon.weight / 10 }}KG</div>
-      </div>
-      <div class="tw-gap-[var(--content-gap-s)] tw-grid">
-        <div class="pokemon-label">Height</div>
-        <div class="pokemon-value">{{ pokemon.height / 10 }}M</div>
-      </div>
-    </div>
-  </section>
-
-  <section class="stat-sec">
-    <p-chart type="radar" [data]="chartData" [options]="chartOptions"></p-chart>
-  </section> -->
 </div>
