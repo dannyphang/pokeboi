@@ -46,13 +46,100 @@
     </div>
   </section>
 
-  <div class="detail-body">
+  <div class="detail-body" [style.--poke-color]="pokemon.species?.color.name">
     <p-tabView>
       <!-- about -->
       <p-tabPanel header="About">
         <section class="description-sec">
           <div class="">
             {{ desc$ | async }}
+          </div>
+
+          <div class="body-div">
+            <div class="height-div">
+              <div class="pokemon-label">Height</div>
+              <div class="pokemon-value">{{ pokemon.height / 10 }} m</div>
+            </div>
+            <div class="weight-div">
+              <div class="pokemon-label">Weight</div>
+              <div class="pokemon-value">{{ pokemon.weight / 10 }} kg</div>
+            </div>
+            <div class="weight-div"></div>
+          </div>
+
+          <div class="detail-div">
+            <div class="breeding-label">Breeding</div>
+            <div class="detail-grid-label-div">
+              <div class="detail-grid-label">Gender</div>
+              <div class="detail-grid-label">Catch Rate</div>
+              <div class="detail-grid-label">Egg Group</div>
+              <div class="detail-grid-label">Egg Cycle</div>
+            </div>
+            <div class="detail-grid-value-div">
+              <div class="detail-grid-value">
+                <div
+                  class="tw-flex tw-gap-[var(--content-gap-xs)] tw-justify-center"
+                >
+                  <span class="pi pi-mars tw-text-blue-500"></span
+                  >{{ ((8 - pokemon.species.gender_rate) / 8) * 100 }}%
+                </div>
+                <div
+                  class="tw-flex tw-gap-[var(--content-gap-xs)] tw-justify-center"
+                >
+                  <span class="pi pi-venus tw-text-pink-500"></span>
+                  {{ (pokemon.species.gender_rate / 8) * 100 }}%
+                </div>
+              </div>
+              <div class="detail-grid-value">
+                {{ pokemon.species.capture_rate }} ({{
+                  (pokemon.species.capture_rate / 255) * 100 | number : "1.2-2"
+                }}%)
+              </div>
+              <div class="detail-grid-value">
+                {{ returnEggGroup() | capitalize }}
+              </div>
+              <div class="detail-grid-value">
+                {{ pokemon.species.hatch_counter }}
+              </div>
+            </div>
+          </div>
+
+          <div class="body-base-div">
+            <div class="base-label">Base</div>
+            <div class="base-grid-group-div">
+              <div class="base-grid-div">
+                <div class="base-grid-label">Abilities</div>
+                <div class="base-grid-value">
+                  <div
+                    *ngFor="let ability of abilities"
+                    class=""
+                    [style.textDecoration]="
+                      ability.hidden ? 'underline' : 'none'
+                    "
+                  >
+                    {{ ability.name | capitalize }}
+                  </div>
+                </div>
+              </div>
+              <div class="base-grid-div">
+                <div class="base-grid-label">Leveling Rate</div>
+                <div class="base-grid-value">
+                  {{ returnGrowthRate() | capitalize }}
+                </div>
+              </div>
+              <div class="base-grid-div">
+                <div class="base-grid-label">Base Friendship</div>
+                <div class="base-grid-value">
+                  {{ pokemon.species.base_happiness }}
+                </div>
+              </div>
+              <div class="base-grid-div">
+                <div class="base-grid-label">Shape</div>
+                <div class="base-grid-value">
+                  {{ pokemon.species.shape.name | capitalize }}
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 

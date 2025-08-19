@@ -5,6 +5,11 @@
   z-index: 1000;
 }
 
-::ng-deep .p-dialog-content {
-  border-radius: 15px;
+::ng-deep {
+  .p-dialog-content {
+    border-radius: 15px;
+  }
+  .p-inputtext {
+    align-self: center;
+  }
 }

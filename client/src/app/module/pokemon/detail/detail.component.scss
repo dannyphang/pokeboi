@@ -55,35 +55,6 @@
   height: 100%;
 }
 
-.detail-body {
-  position: relative;
-  top: -40px;
-  padding: var(--content-gap-xxxl) var(--content-gap) 0;
-  background-color: var(--surface-0);
-  border-top-left-radius: 24px;
-  border-top-right-radius: 24px;
-}
-
-.pokemon-detail-sec {
-  padding: var(--content-gap);
-  display: grid;
-  width: 100%;
-  gap: var(--content-gap);
-}
-
-.pokemon-label {
-  font-size: var(--font-h4-size);
-  text-align: center;
-}
-
-.pokemon-value {
-  font-size: var(--font-h2-size);
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  gap: var(--content-gap);
-}
-
 .pokemon-name {
   font-size: var(--font-h1-size);
   font-weight: bold;
@@ -93,12 +64,6 @@
   justify-content: start;
   display: flex;
   align-items: center;
-}
-
-.body-detail-div {
-  display: flex;
-  gap: var(--content-gap);
-  justify-content: space-around;
 }
 
 ::ng-deep {
@@ -117,7 +82,117 @@
   font-size: var(--font-h2-size);
 }
 
-//#endregion evolution
+.detail-body {
+  position: relative;
+  top: -40px;
+  padding: var(--content-gap-xxxl) var(--content-gap) 0;
+  background-color: var(--surface-0);
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+}
+
+//#endregion main
+
+//#region body
+.description-sec {
+  display: grid;
+  gap: var(--content-gap);
+}
+
+.body-div {
+  border-radius: 12px;
+  border: 1px solid var(--poke-color);
+  display: grid;
+  grid-column-gap: var(--content-gap);
+  grid-template-areas: "height-div weight-div";
+  grid-template-rows: 100%;
+  grid-template-columns: 1fr 1fr;
+  justify-content: start;
+  padding: var(--content-gap);
+}
+
+.height-div,
+.weight-div {
+  display: grid;
+  gap: var(--content-gap-xs);
+}
+
+.pokemon-label {
+  font-size: var(--font-h4-size);
+  text-align: start;
+}
+
+.pokemon-value {
+  font-size: var(--font-h2-size);
+  text-align: start;
+  display: flex;
+  justify-content: start;
+  gap: var(--content-gap);
+}
+
+.detail-div {
+  display: grid;
+  grid-template-areas: "breeding-label breeding-label" "detail-grid-label-div detail-grid-value-div";
+  grid-template-columns: 40% 60%;
+  row-gap: var(--content-gap);
+}
+
+.breeding-label {
+  grid-area: breeding-label;
+  display: grid;
+  font-size: var(--font-h3-size);
+  width: 100%;
+}
+
+.detail-grid-label-div,
+.detail-grid-value-div {
+  display: grid;
+  row-gap: var(--content-gap-xs);
+}
+
+.detail-grid-label {
+  font-size: var(--font-h4-size);
+}
+
+.detail-grid-value {
+  display: flex;
+  gap: var(--content-gap);
+  font-size: var(--font-h4-size);
+}
+
+.body-base-div {
+  display: grid;
+  grid-template-areas: "base-label" "base-grid-group-div";
+  grid-template-columns: 100%;
+  row-gap: var(--content-gap);
+}
+
+.base-label {
+  grid-area: base-label;
+  font-size: var(--font-h3-size);
+  display: grid;
+}
+
+.base-grid-group-div {
+  display: grid;
+  grid-area: base-grid-group-div;
+  row-gap: var(--content-gap-xs);
+}
+
+.base-grid-div {
+  display: grid;
+  grid-template-areas: "base-grid-label base-grid-value";
+  grid-template-columns: 40% 60%;
+}
+
+.base-grid-label,
+.base-grid-value {
+  font-size: var(--font-h4-size);
+  display: flex;
+  gap: var(--content-gap-xs);
+}
+
+#endregion
 
 // #region type effectiveness
 .type-effectiveness-div {
@@ -152,7 +227,7 @@
   gap: var(--content-gap);
   flex-wrap: wrap;
   border-radius: 8px;
-  border: 1px solid var(--primary-color);
+  border: 1px solid var(--poke-color);
   //   flex-direction: column;
 }
 
@@ -193,8 +268,7 @@
   height: 40%;
   width: 100%;
   justify-content: space-evenly;
-  border-width: 1px;
-  border-style: solid;
+  border: 1px solid var(--poke-color);
   align-items: center;
 }
 

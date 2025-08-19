@@ -363,4 +363,14 @@ export class DetailComponent {
       this.router.navigate(['/pokemon', pokemonId]);
     }
   }
+
+  returnEggGroup() {
+    if (!this.pokemonId) return;
+    const eggGroup = this.pokemon.species?.egg_groups.map(group => group.name).join(' and ');
+    return eggGroup || 'Unknown';
+  }
+
+  returnGrowthRate() {
+    return this.pokemon.species.growth_rate.name.toString().replace(/-/g, " ");
+  }
 }
