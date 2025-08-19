@@ -55,3 +55,59 @@ export const STATS_NAME = {
     'special-defense': 'Sp. Def',
     speed: 'Spd'
 };
+
+export const VERSION_COLOR = {
+    // Gen I
+    "red": "#FF0000",
+    "blue": "#0000FF",
+    "yellow": "#FFD733",
+    "green": "#00CC00", // JP only
+
+    // Gen II
+    "gold": "#DAA520",
+    "silver": "#C0C0C0",
+    "crystal": "#4FD9FF",
+
+    // Gen III
+    "ruby": "#E0115F",
+    "sapphire": "#0A52BF",
+    "emerald": "#50C878",
+    "fire red": "#FF4500",
+    "leaf green": "#32CD32",
+
+    // Gen IV
+    "diamond": "#B9F2FF",
+    "pearl": "#E8E0F0",
+    "platinum": "#CECECE",
+    "heart gold": "#B8860B",
+    "soul silver": "#B0C4DE",
+
+    // Gen V
+    "black": "#101820",
+    "white": "#FFFFFF",
+    "black 2": "#1C1C1C",
+    "white 2": "#F5F5F5",
+
+    // Gen VI
+    "x": "#5DADEC",
+    "y": "#FF69B4",
+    "omega ruby": "#B22222",
+    "alpha sapphire": "#4169E1",
+
+    // Gen VII
+    "sun": "#FFCC33",
+    "moon": "#483D8B",
+    "ultra sun": "#FFB347",
+    "ultra moon": "#9370DB",
+
+    // Gen VIII
+    "sword": "#4169E1",
+    "shield": "#DC143C",
+    "brilliant diamond": "#ADD8E6",
+    "shining pearl": "#F8C8DC",
+    "legends arceus": "#708090",
+
+    // Gen IX
+    "scarlet": "#C41E3A",
+    "violet": "#8F00FF",
+}

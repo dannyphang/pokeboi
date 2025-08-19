@@ -197,4 +197,40 @@ router.get("/evolution", async (req, res) => {
     }
 });
 
+// get encounter location
+router.get("/encounter", async (req, res) => {
+    try {
+        pokemon
+            .pokemonEncounterLocation(func.body(req).headers.url)
+            .then((locations) => {
+                res.status(200).json(
+                    func.responseModel({
+                        isSuccess: true,
+                        responseMessage: "Pokemon encounter locations retrieved successfully",
+                        data: locations,
+                    })
+                );
+            })
+            .catch(async (error) => {
+                console.error("Error retrieving Pokemon encounter locations:", error);
+                await API.createLog(error, req, res, 500, "pokemon");
+                res.status(500).json(
+                    func.responseModel({
+                        isSuccess: false,
+                        responseMessage: error,
+                    })
+                );
+            });
+    } catch (error) {
+        console.error("Error retrieving Pokemon encounter locations:", error);
+        await API.createLog(error, req, res, 500, "pokemon");
+        res.status(500).json(
+            func.responseModel({
+                isSuccess: false,
+                responseMessage: error,
+            })
+        );
+    }
+});
+
 export default router;

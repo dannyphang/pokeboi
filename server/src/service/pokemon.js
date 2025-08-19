@@ -166,4 +166,15 @@ function parseEvolutionChain(chain) {
     return result;
 }
 
-export { allPokemon, getAllTypes, pokemonById, getAllVersions, getTypeRelations, getMoves, getEvolutionChain };
+function pokemonEncounterLocation(url) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let areas = await axios.get(url);
+            resolve(areas.data);
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+
+export { allPokemon, getAllTypes, pokemonById, getAllVersions, getTypeRelations, getMoves, getEvolutionChain, pokemonEncounterLocation };

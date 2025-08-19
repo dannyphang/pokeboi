@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PokemonService } from '../../../core/services/pokemon.service';
 import { Title } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
-import { STATS_NAME, TYPE_COLOR } from '../../../core/shared/constants/common.constants';
+import { STATS_NAME, TYPE_COLOR, VERSION_COLOR } from '../../../core/shared/constants/common.constants';
 import { FormControl, FormGroup } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 
@@ -29,6 +29,7 @@ export class DetailComponent {
   displayMoveList: any[] = [];
   evolutionChain: any[] = [];
   desc$ = new BehaviorSubject<string>('');
+  locationList: any[] = [];
 
   settingFormGroup = new FormGroup({
     version: new FormControl(''),
@@ -108,6 +109,9 @@ export class DetailComponent {
 
         // load evolution chain
         this.loadEvolutionChain();
+
+        // load encounter location
+        this.loadEncounterLocation();
 
         this.pokemonImageClicked();
       },
@@ -372,5 +376,42 @@ export class DetailComponent {
 
   returnGrowthRate() {
     return this.pokemon.species.growth_rate.name.toString().replace(/-/g, " ");
+  }
+
+  loadEncounterLocation() {
+    if (this.pokemon.id) {
+      this.pokemonService.getEncounterLocation(this.pokemon?.location_area_encounters).subscribe({
+        next: (res) => {
+          this.locationList = res.data.map(data => ({
+            location: data.location_area.name.toString().replace(/-/g, " "),
+            version: data.version_details.map(ver => ver.version.name.toString().replace(/-/g, " "))
+          }));
+          console.log(this.locationList);
+        },
+        error: () => {
+          this.locationList = [];
+        },
+      });
+    }
+  }
+
+  returnVersionColor(version: string): string {
+    return VERSION_COLOR[version] || '#000000';
+  }
+
+  getContrastColor(hex: string): string {
+    // Remove "#" if present
+    const cleanHex = hex.replace("#", "");
+
+    // Convert to RGB
+    const r = parseInt(cleanHex.substring(0, 2), 16);
+    const g = parseInt(cleanHex.substring(2, 4), 16);
+    const b = parseInt(cleanHex.substring(4, 6), 16);
+
+    // Calculate relative luminance (YIQ formula)
+    const yiq = (r * 299 + g * 587 + b * 114) / 1000;
+
+    // Return black for light backgrounds, white for dark
+    return yiq >= 128 ? "#000000" : "#FFFFFF";
   }
 }

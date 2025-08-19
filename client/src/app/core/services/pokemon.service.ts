@@ -69,4 +69,9 @@ export class PokemonService {
     getEvolutionChain(url: string): Observable<ResponseModel<any>> {
         return this.coreService.get<any>(`${this.SERVICE_PATH_URL}/evolution`, { headers: { url: url } }).pipe();
     }
+
+    getEncounterLocation(url: string): Observable<ResponseModel<any>> {
+        console.log(url)
+        return this.coreService.get<any>(`${this.SERVICE_PATH_URL}/encounter`, { headers: { url: url } }).pipe();
+    }
 }

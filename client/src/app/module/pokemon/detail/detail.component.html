@@ -143,7 +143,29 @@
           </div>
         </section>
 
-        <section></section>
+        <section class="encounter-sec">
+          <div class="encounter-title">Encounter Locations</div>
+          <div class="location-list">
+            <div *ngFor="let location of locationList" class="location-item">
+              <div
+                *ngFor="let version of location.version"
+                class="location-version-item"
+              >
+                <div
+                  class="version-label"
+                  [style.--version-color]="returnVersionColor(version)"
+                  [style.--poke-color]="pokemon.species.color.name"
+                  [style.color]="getContrastColor(returnVersionColor(version))"
+                >
+                  <div class="version-tag">{{ version | capitalize }}</div>
+                </div>
+                <div class="location-label">
+                  {{ location.location | capitalize }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
       </p-tabPanel>
 
       <!-- base stats -->
