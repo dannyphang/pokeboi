@@ -11,7 +11,7 @@ router.use(express.json());
 router.get("/", async (req, res) => {
     try {
         pokemon
-            .allPokemon({ offset: func.body(req).headers.offset, limit: func.body(req).headers.limit })
+            .allPokemon({ offset: func.body(req).headers.offset, limit: func.body(req).headers.limit, pokedex: func.body(req).headers.pokedex })
             .then((url) => {
                 res.status(200).json(
                     func.responseModel({
@@ -56,6 +56,52 @@ router.get("/type", async (req, res) => {
         );
     } catch (error) {
         console.error("Error retrieving Pokemon types:", error);
+        await API.createLog(error, req, res, 500, "pokemon");
+        res.status(500).json(
+            func.responseModel({
+                isSuccess: false,
+                responseMessage: error,
+            })
+        );
+    }
+});
+
+// regions
+router.get("/regions", async (req, res) => {
+    try {
+        const regions = await pokemon.getAllRegions();
+        res.status(200).json(
+            func.responseModel({
+                isSuccess: true,
+                responseMessage: "All Pokemon regions retrieved successfully",
+                data: regions,
+            })
+        );
+    } catch (error) {
+        console.error("Error retrieving Pokemon regions:", error);
+        await API.createLog(error, req, res, 500, "pokemon");
+        res.status(500).json(
+            func.responseModel({
+                isSuccess: false,
+                responseMessage: error,
+            })
+        );
+    }
+});
+
+// generations
+router.get("/generations", async (req, res) => {
+    try {
+        const generations = await pokemon.getAllGen();
+        res.status(200).json(
+            func.responseModel({
+                isSuccess: true,
+                responseMessage: "All Pokemon generations retrieved successfully",
+                data: generations,
+            })
+        );
+    } catch (error) {
+        console.error("Error retrieving Pokemon generations:", error);
         await API.createLog(error, req, res, 500, "pokemon");
         res.status(500).json(
             func.responseModel({

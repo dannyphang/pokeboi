@@ -58,4 +58,22 @@
       <div class="pokemon-name poke-font">{{ pokemon.name | capitalize }}</div>
     </div>
   </div>
+
+  <div class="pokemonSearch">
+    <app-base-input
+      [fieldControl]="searchFormControl"
+      [iconRightStyle]="'pi pi-search'"
+    ></app-base-input>
+  </div>
+
+  <div class="pokemon-gen-div">
+    <div *ngFor="let gen of genList">
+      <app-base-button
+        *ngIf="gen.region"
+        [label]="gen.region | capitalize"
+        [outlined]="true"
+        (onClick)="selectedRegion(gen)"
+      ></app-base-button>
+    </div>
+  </div>
 </div>

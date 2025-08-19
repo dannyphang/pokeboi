@@ -3,6 +3,7 @@ import { PokemonService } from '../../core/services/pokemon.service';
 import { DEFAULT_LIMIT, DEFAULT_OFFSET, TYPE_COLOR } from '../../core/shared/constants/common.constants';
 import { Router } from '@angular/router';
 import { DOCUMENT } from '@angular/common';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-pokemon',
@@ -22,6 +23,8 @@ export class PokemonComponent {
   loadThreshold = 2000;
   typeList: any[] = [];
   typeColors = TYPE_COLOR;
+  genList: any[] = [];
+  regionList: any[] = [];
 
   rotation = 0;
   isDragging = false;
@@ -30,6 +33,7 @@ export class PokemonComponent {
 
   selectedPokemon: any;
   selectedTypes: any[] = [];
+  searchFormControl: FormControl = new FormControl('');
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
@@ -41,6 +45,8 @@ export class PokemonComponent {
     this.setFavicon("favicon.ico"); // Set default favicon
     this.loadPokemon();
     this.loadTypes();
+    this.loadRegions();
+    this.loadGenerations();
   }
 
   setFavicon(iconUrl: string) {
@@ -69,12 +75,12 @@ export class PokemonComponent {
     };
   }
 
-  loadPokemon(): void {
+  loadPokemon(pokedex: string = 'letsgo-kanto'): void {
     if (this.loading) return;
 
     this.loading = true;
 
-    this.pokemonService.getPokemons(this.nextOffset, this.limit).subscribe({
+    this.pokemonService.getPokemons(this.nextOffset, this.limit, pokedex).subscribe({
       next: (res) => {
         const results = res.data.results || [];
 
@@ -212,5 +218,56 @@ export class PokemonComponent {
 
   goInPokemon() {
     this.router.navigate(['/pokemon', this.selectedPokemon.id]);
+  }
+
+  loadRegions() {
+    this.pokemonService.getRegions().subscribe({
+      next: (res) => {
+        this.regionList = res.data;
+        console.log(this.regionList);
+      },
+      error: () => {
+        console.error('Error loading Pokemon regions');
+      },
+    });
+  }
+
+  loadGenerations() {
+    this.pokemonService.getGenerations().subscribe({
+      next: (res) => {
+        this.genList = this.groupByRegionWithMostPokemon(res.data);
+        console.log(this.genList);
+      },
+      error: () => {
+        console.error('Error loading Pokemon generations');
+      },
+    });
+  }
+
+  groupByRegionWithMostPokemon(pokedexList: any[]) {
+    const regionMap: Record<string, any> = {};
+
+    for (const dex of pokedexList) {
+      const region = dex.region?.name ?? "unknown";
+      const entryCount = dex.pokemon_entries?.length ?? 0;
+
+      if (!regionMap[region] || entryCount > regionMap[region].pokemon_entries.length) {
+        regionMap[region] = dex; // replace with the one that has more entries
+      }
+    }
+
+    // Format into desired output
+    return Object.values(regionMap).map((dex: any) => ({
+      region: dex.region?.name,
+      pokedex: dex.name,
+      version: dex.version_groups?.[0]?.name,
+      pokemonList: dex.pokemon_entries,
+    }));
+  }
+
+  // TODO
+  selectedRegion(region: any) {
+    console.log(region);
+    this.loadPokemon(region.pokedex);
   }
 }

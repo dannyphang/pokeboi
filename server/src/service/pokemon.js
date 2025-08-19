@@ -2,18 +2,15 @@ import * as Poke from "../configuration/pokemonConfig.js";
 import { DEFAULT_OFFSET, DEFAULT_LIMIT } from "../shared/constant.js";
 import axios from "axios";
 
-async function allPokemon({ offset = DEFAULT_OFFSET, limit = DEFAULT_LIMIT }) {
+async function allPokemon({ offset = DEFAULT_OFFSET, limit = DEFAULT_LIMIT, pokedex = "letsgo-kanto" }) {
     return new Promise(async (resolve, reject) => {
         try {
             Poke.pokedex
-                .getPokemonsList({
-                    offset: offset ?? DEFAULT_OFFSET,
-                    limit: limit ?? DEFAULT_LIMIT,
-                })
+                .getPokedexByName(pokedex)
                 .then(async (res) => {
                     let pokeData = await Promise.all(
-                        res.results.map(async (poke) => {
-                            let pokemon = await Poke.pokedex.getPokemonByName(poke.name);
+                        res.pokemon_entries.map(async (poke) => {
+                            let pokemon = await Poke.pokedex.getPokemonByName(poke.pokemon_species.name);
                             pokemon.species = await Poke.pokedex.getPokemonSpeciesByName(pokemon.id);
                             return pokemon;
                         })
@@ -29,6 +26,17 @@ async function allPokemon({ offset = DEFAULT_OFFSET, limit = DEFAULT_LIMIT }) {
                 .catch((error) => {
                     reject(error);
                 });
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+
+async function allPokemonByArea() {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let areas = await Poke.pokedex.getRegionsList();
+            resolve(areas);
         } catch (error) {
             reject(error);
         }
@@ -70,6 +78,47 @@ async function pokemonById(id) {
                 })
             );
             resolve(pokemon);
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+
+async function getAllRegions() {
+    return new Promise(async (resolve, reject) => {
+        try {
+            Poke.pokedex.getRegionsList().then(async (res) => {
+                let region = res.results.map(async (region) => {
+                    let regionData = await Poke.pokedex.getRegionByName(region.name);
+                    return regionData;
+                });
+
+                resolve(await Promise.all(region));
+            });
+            // Poke.pokedex.getPokedexList().then(async (res) => {
+
+            //     let pokeList = res.results.map(async (poke) => {
+            //         let pokemonData = await Poke.pokedex.getPokedexByName(poke.name);
+            //         return pokemonData;
+            //     });
+            //     resolve(await Promise.all(pokeList));
+            // });
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+
+async function getAllGen() {
+    return new Promise(async (resolve, reject) => {
+        try {
+            Poke.pokedex.getPokedexList().then(async (res) => {
+                let pokeList = res.results.map(async (poke) => {
+                    let pokemonData = await Poke.pokedex.getPokedexByName(poke.name);
+                    return pokemonData;
+                });
+                resolve(await Promise.all(pokeList));
+            });
         } catch (error) {
             reject(error);
         }
@@ -177,4 +226,4 @@ function pokemonEncounterLocation(url) {
     });
 }
 
-export { allPokemon, getAllTypes, pokemonById, getAllVersions, getTypeRelations, getMoves, getEvolutionChain, pokemonEncounterLocation };
+export { allPokemon, allPokemonByArea, getAllTypes, pokemonById, getAllRegions, getAllGen, getAllVersions, getTypeRelations, getMoves, getEvolutionChain, pokemonEncounterLocation };
