@@ -30,7 +30,8 @@
     </div>
   </div>
 
-  <div
+  <!-- pokeball -->
+  <img
     #pokeball
     class="pokeball"
     [style.transform]="'translateX(-50%) rotate(' + rotation + 'deg)'"
@@ -41,15 +42,16 @@
     (touchmove)="rotateTouch($event)"
     (touchend)="stopRotateTouch()"
     (touchcancel)="stopRotateTouch()"
-  ></div>
+    [src]="'/assets/images/balls/pokeball.png'"
+  />
 
   <div #pokemonListEl class="poke-div">
     <div
       class="pokemon-list-card"
-      *ngFor="let pokemon of pokemonList"
+      *ngFor="let pokemon of displayPokemonList"
       (click)="selectPokemon(pokemon)"
       [ngClass]="{
-        'selected-border': selectedPokemon.id === pokemon.id
+        'selected-border': selectedPokemon?.id === pokemon.id
       }"
     >
       <div class="pokemon-id poke-font">
@@ -73,6 +75,7 @@
         [label]="gen.region | capitalize"
         [outlined]="true"
         (onClick)="selectedRegion(gen)"
+        [rounded]="true"
       ></app-base-button>
     </div>
   </div>

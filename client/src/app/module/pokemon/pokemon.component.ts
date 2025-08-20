@@ -15,8 +15,8 @@ export class PokemonComponent {
   @ViewChild('pokemonListEl', { static: true }) listEl!: ElementRef<HTMLDivElement>;
 
   pokemonList: any[] = [];
+  displayPokemonList: any[] = [];
   loadedNames = new Set<string>(); // to avoid duplicates
-  hasNextPage = false;
   nextOffset = DEFAULT_OFFSET;
   limit = DEFAULT_LIMIT;
   loading = false;
@@ -47,6 +47,13 @@ export class PokemonComponent {
     this.loadTypes();
     this.loadRegions();
     this.loadGenerations();
+
+    this.searchFormControl.valueChanges.subscribe((searchTerm: string) => {
+      this.displayPokemonList = this.pokemonList.filter(pokemon => {
+        return pokemon.name.toLowerCase().includes(searchTerm.trim().toLowerCase()) || pokemon.id.toString().includes(searchTerm.trim());
+      });
+      this.selectPokemon(this.displayPokemonList[0]);
+    });
   }
 
   setFavicon(iconUrl: string) {
@@ -82,16 +89,14 @@ export class PokemonComponent {
 
     this.pokemonService.getPokemons(this.nextOffset, this.limit, pokedex).subscribe({
       next: (res) => {
-        const results = res.data.results || [];
+        const results = res.data || [];
 
-        this.pokemonList.push(...results);
+        this.pokemonList = results;
+        this.displayPokemonList = results;
 
-        this.hasNextPage = !!res.data.next;
         this.loading = false;
 
-        if (!this.selectedPokemon) {
-          this.selectPokemon(this.pokemonList[0]);
-        }
+        this.selectPokemon(this.displayPokemonList[0]);
 
         console.log(results);
       },
@@ -174,20 +179,20 @@ export class PokemonComponent {
       }
 
       // Load more if near bottom
-      if (
-        delta > 0 &&
-        !this.loading &&
-        this.hasNextPage &&
-        proposedScrollTop + list.clientHeight >= list.scrollHeight - this.loadThreshold
-      ) {
-        const prevHeight = list.scrollHeight;
-        this.nextOffset += this.limit;
-        this.loadPokemon();
+      // if (
+      //   delta > 0 &&
+      //   !this.loading &&
+      //   this.hasNextPage &&
+      //   proposedScrollTop + list.clientHeight >= list.scrollHeight - this.loadThreshold
+      // ) {
+      //   const prevHeight = list.scrollHeight;
+      //   this.nextOffset += this.limit;
+      //   this.loadPokemon();
 
-        setTimeout(() => {
-          list.scrollTop = proposedScrollTop + (list.scrollHeight - prevHeight);
-        });
-      }
+      //   setTimeout(() => {
+      //     list.scrollTop = proposedScrollTop + (list.scrollHeight - prevHeight);
+      //   });
+      // }
     }
   }
 
@@ -199,21 +204,28 @@ export class PokemonComponent {
   }
 
   selectPokemon(pokemon: any) {
-    this.selectedPokemon = pokemon;
+    this.pokemonService.getPokemon(pokemon.id).subscribe({
+      next: (res) => {
+        this.selectedPokemon = res.data;
 
-    this.selectedTypes = this.typeList.filter(type =>
-      pokemon.types.some(t => t.type.name === type.name)
-    );
+        this.selectedTypes = this.typeList.filter(type =>
+          this.selectedPokemon.types.some(t => t.type.name === type.name)
+        );
 
-    // Trigger jump after 1 second
-    setTimeout(() => {
-      this.isJumping = true;
+        // Trigger jump after 1 second
+        setTimeout(() => {
+          this.isJumping = true;
 
-      // Remove the class after animation ends (so it can be retriggered)
-      setTimeout(() => {
-        this.isJumping = false;
-      }, 400); // match animation duration
-    }, 300);
+          // Remove the class after animation ends (so it can be retriggered)
+          setTimeout(() => {
+            this.isJumping = false;
+          }, 400); // match animation duration
+        }, 300);
+      },
+      error: () => {
+        console.error('Error loading Pokemon details');
+      },
+    });
   }
 
   goInPokemon() {
@@ -265,9 +277,7 @@ export class PokemonComponent {
     }));
   }
 
-  // TODO
   selectedRegion(region: any) {
-    console.log(region);
     this.loadPokemon(region.pokedex);
   }
 }

@@ -382,10 +382,10 @@ export class DetailComponent {
     if (this.pokemon.id) {
       this.pokemonService.getEncounterLocation(this.pokemon?.location_area_encounters).subscribe({
         next: (res) => {
-          this.locationList = res.data.map(data => ({
+          this.locationList = this.groupByVersion(res.data.map(data => ({
             location: data.location_area.name.toString().replace(/-/g, " "),
             version: data.version_details.map(ver => ver.version.name.toString().replace(/-/g, " "))
-          }));
+          })));
           console.log(this.locationList);
         },
         error: () => {
@@ -394,6 +394,26 @@ export class DetailComponent {
       });
     }
   }
+
+  groupByVersion(data: { location: string; version: string[] }[]) {
+    const grouped: Record<string, string[]> = {};
+
+    data.forEach(entry => {
+      entry.version.forEach(ver => {
+        if (!grouped[ver]) {
+          grouped[ver] = [];
+        }
+        grouped[ver].push(entry.location);
+      });
+    });
+
+    // Convert object to array of { version, locations }
+    return Object.entries(grouped).map(([version, locations]) => ({
+      version,
+      locations
+    }));
+  }
+
 
   returnVersionColor(version: string): string {
     return VERSION_COLOR[version] || '#000000';

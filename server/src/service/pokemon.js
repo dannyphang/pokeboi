@@ -10,18 +10,12 @@ async function allPokemon({ offset = DEFAULT_OFFSET, limit = DEFAULT_LIMIT, poke
                 .then(async (res) => {
                     let pokeData = await Promise.all(
                         res.pokemon_entries.map(async (poke) => {
-                            let pokemon = await Poke.pokedex.getPokemonByName(poke.pokemon_species.name);
-                            pokemon.species = await Poke.pokedex.getPokemonSpeciesByName(pokemon.id);
+                            let pokemon = (await axios.get(poke.pokemon_species.url)).data;
                             return pokemon;
                         })
                     );
-                    let pokeList = {
-                        count: pokeData.length,
-                        next: res.next,
-                        previous: res.previous,
-                        results: pokeData,
-                    };
-                    resolve(pokeList);
+                    // pokeData.sort((a, b) => a.order - b.order);
+                    resolve(pokeData);
                 })
                 .catch((error) => {
                     reject(error);
