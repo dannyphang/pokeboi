@@ -20,15 +20,24 @@ export class PokemonComponent {
   nextOffset = DEFAULT_OFFSET;
   limit = DEFAULT_LIMIT;
   loading = false;
-  loadThreshold = 2000;
   typeList: any[] = [];
   typeColors = TYPE_COLOR;
   genList: any[] = [];
   regionList: any[] = [];
 
+  // component.ts
   rotation = 0;
   isDragging = false;
   startAngle = 0;
+  scrollThumbTop = 0;
+
+  // Keep track of accumulated rotation
+  private accumulatedDelta = 0;
+  scrollThumbHeight = 40; // px height of thumb
+  private isThumbDragging = false;
+  private thumbStartY = 0;
+  private listStartScroll = 0;
+  selectedIndex = 0;
   isJumping = false;
 
   selectedPokemon: any;
@@ -55,6 +64,54 @@ export class PokemonComponent {
       this.selectPokemon(this.displayPokemonList[0]);
     });
   }
+
+  ngAfterViewInit() {
+    const list = this.listEl.nativeElement;
+    list.addEventListener('scroll', () => {
+      const maxScroll = list.scrollHeight - list.clientHeight;
+      this.scrollThumbTop = (list.scrollTop / maxScroll) * 100;
+    });
+  }
+
+  // ------------------- Custom Scroll Thumb -------------------
+  startThumbDrag(event: MouseEvent | TouchEvent) {
+    event.preventDefault();
+    this.isThumbDragging = true;
+
+    this.thumbStartY = 'touches' in event ? event.touches[0].clientY : event.clientY;
+    this.listStartScroll = this.listEl.nativeElement.scrollTop;
+
+    this.document.addEventListener('mousemove', this.onThumbMove);
+    this.document.addEventListener('mouseup', this.stopThumbDrag);
+
+    this.document.addEventListener('touchmove', this.onThumbMove, { passive: false });
+    this.document.addEventListener('touchend', this.stopThumbDrag);
+  }
+
+  onThumbMove = (event: MouseEvent | TouchEvent) => {
+    if (!this.isThumbDragging) return;
+
+    const clientY = 'touches' in event ? event.touches[0].clientY : event.clientY;
+    const deltaY = clientY - this.thumbStartY;
+
+    const list = this.listEl.nativeElement;
+    const maxScroll = list.scrollHeight - list.clientHeight;
+    const trackHeight = list.clientHeight - this.scrollThumbHeight;
+
+    // translate thumb movement into scrollTop
+    const scrollDelta = (deltaY / trackHeight) * maxScroll;
+    list.scrollTop = this.listStartScroll + scrollDelta;
+  };
+
+  stopThumbDrag = () => {
+    this.isThumbDragging = false;
+
+    this.document.removeEventListener('mousemove', this.onThumbMove);
+    this.document.removeEventListener('mouseup', this.stopThumbDrag);
+
+    this.document.removeEventListener('touchmove', this.onThumbMove);
+    this.document.removeEventListener('touchend', this.stopThumbDrag);
+  };
 
   setFavicon(iconUrl: string) {
     const canvas = document.createElement('canvas');
@@ -168,31 +225,18 @@ export class PokemonComponent {
     this.rotation += delta;
     this.startAngle = currentAngle;
 
-    const list = this.listEl.nativeElement;
-    const maxScroll = list.scrollHeight - list.clientHeight;
+    // Accumulate rotation
+    this.accumulatedDelta += delta;
 
-    // Only scroll if movement is significant
-    if (Math.abs(delta) > 0.5) {
-      const proposedScrollTop = list.scrollTop + delta * 5;
-      if (proposedScrollTop >= 0 && proposedScrollTop <= maxScroll) {
-        list.scrollTop = proposedScrollTop;
-      }
+    // Check threshold (15 degrees for example)
+    const threshold = 50;
 
-      // Load more if near bottom
-      // if (
-      //   delta > 0 &&
-      //   !this.loading &&
-      //   this.hasNextPage &&
-      //   proposedScrollTop + list.clientHeight >= list.scrollHeight - this.loadThreshold
-      // ) {
-      //   const prevHeight = list.scrollHeight;
-      //   this.nextOffset += this.limit;
-      //   this.loadPokemon();
-
-      //   setTimeout(() => {
-      //     list.scrollTop = proposedScrollTop + (list.scrollHeight - prevHeight);
-      //   });
-      // }
+    if (this.accumulatedDelta >= threshold) {
+      this.selectNextPokemon();
+      this.accumulatedDelta = 0; // reset
+    } else if (this.accumulatedDelta <= -threshold) {
+      this.selectPreviousPokemon();
+      this.accumulatedDelta = 0; // reset
     }
   }
 
@@ -203,23 +247,35 @@ export class PokemonComponent {
     return Math.atan2(clientY - centerY, clientX - centerX) * (180 / Math.PI);
   }
 
-  selectPokemon(pokemon: any) {
+  private scrollToSelected() {
+    const list = this.listEl.nativeElement;
+    const selectedEl = list.children[this.selectedIndex] as HTMLElement;
+    if (selectedEl) {
+      list.scrollTo({
+        top: selectedEl.offsetTop - 110,
+        behavior: 'smooth'
+      });
+    }
+  }
+
+  selectPokemon(pokemon: any, index?: number) {
     this.pokemonService.getPokemon(pokemon.id).subscribe({
       next: (res) => {
         this.selectedPokemon = res.data;
+
+        if (index !== undefined) {
+          this.selectedIndex = index; // sync index on click
+        }
 
         this.selectedTypes = this.typeList.filter(type =>
           this.selectedPokemon.types.some(t => t.type.name === type.name)
         );
 
-        // Trigger jump after 1 second
+        this.scrollToSelected();
+
         setTimeout(() => {
           this.isJumping = true;
-
-          // Remove the class after animation ends (so it can be retriggered)
-          setTimeout(() => {
-            this.isJumping = false;
-          }, 400); // match animation duration
+          setTimeout(() => (this.isJumping = false), 400);
         }, 300);
       },
       error: () => {
@@ -279,5 +335,23 @@ export class PokemonComponent {
 
   selectedRegion(region: any) {
     this.loadPokemon(region.pokedex);
+  }
+
+  selectNextPokemon() {
+    if (this.displayPokemonList.length === 0) return;
+
+    if (this.selectedIndex < this.displayPokemonList.length - 1) {
+      this.selectedIndex++;
+      this.selectPokemon(this.displayPokemonList[this.selectedIndex]);
+    }
+  }
+
+  selectPreviousPokemon() {
+    if (this.displayPokemonList.length === 0) return;
+
+    if (this.selectedIndex > 0) {
+      this.selectedIndex--;
+      this.selectPokemon(this.displayPokemonList[this.selectedIndex]);
+    }
   }
 }

@@ -1,0 +1,43 @@
+<!-- Ultra Ball SVG -->
+<svg
+  width="200" height="200" viewBox="0 0 200 200"
+  xmlns="http://www.w3.org/2000/svg"
+  style="--ultra-black:#111; --ultra-yellow:#facc15; --poke-white:#fff;"
+  role="img" aria-label="Ultra Ball"
+>
+  <defs>
+    <clipPath id="clip-top">
+      <rect x="0" y="0" width="200" height="100" />
+    </clipPath>
+    <clipPath id="clip-bottom">
+      <rect x="0" y="100" width="200" height="100" />
+    </clipPath>
+    <radialGradient id="shine" cx="35%" cy="30%" r="70%">
+      <stop offset="0" stop-color="#fff" stop-opacity=".35"/>
+      <stop offset=".6" stop-color="#fff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Outer stroke -->
+  <circle cx="100" cy="100" r="95" fill="none" stroke="#000" stroke-width="10"/>
+
+  <!-- Top half (black) -->
+  <circle cx="100" cy="100" r="90" fill="var(--ultra-black)" clip-path="url(#clip-top)"/>
+  <!-- Bottom half (white) -->
+  <circle cx="100" cy="100" r="90" fill="var(--poke-white)" clip-path="url(#clip-bottom)"/>
+
+  <!-- Yellow Stripes -->
+  <rect x="25" y="55" width="45" height="20" rx="8" ry="8" fill="var(--ultra-yellow)" />
+  <rect x="130" y="55" width="45" height="20" rx="8" ry="8" fill="var(--ultra-yellow)" />
+
+  <!-- Black center band -->
+  <rect x="10" y="95" width="180" height="10" fill="#000"/>
+
+  <!-- Button outer -->
+  <circle cx="100" cy="100" r="24" fill="var(--poke-white)" stroke="#000" stroke-width="8"/>
+  <!-- Button inner -->
+  <circle cx="100" cy="100" r="10" fill="#e0e0e0" stroke="#000" stroke-width="3"/>
+
+  <!-- Shine -->
+  <circle cx="100" cy="100" r="90" fill="url(#shine)" pointer-events="none"/>
+</svg>

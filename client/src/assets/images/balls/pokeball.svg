@@ -1,0 +1,42 @@
+<!-- Poké Ball SVG -->
+<svg
+  width="200" height="200" viewBox="0 0 200 200"
+  xmlns="http://www.w3.org/2000/svg"
+  style="--poke-red:#e53935; --poke-black:#111; --poke-white:#fff;"
+  role="img" aria-label="Poké Ball"
+>
+  <defs>
+    <!-- clip top/bottom halves -->
+    <clipPath id="clip-top">
+      <rect x="0" y="0" width="200" height="100" />
+    </clipPath>
+    <clipPath id="clip-bottom">
+      <rect x="0" y="100" width="200" height="100" />
+    </clipPath>
+    <!-- soft vignette for a subtle 3D feel (optional) -->
+    <radialGradient id="shine" cx="35%" cy="30%" r="70%">
+      <stop offset="0" stop-color="#fff" stop-opacity=".35"/>
+      <stop offset=".6" stop-color="#fff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Outer circle (stroke) -->
+  <circle cx="100" cy="100" r="95" fill="none" stroke="var(--poke-black)" stroke-width="10"/>
+
+  <!-- Top half (red) -->
+  <circle cx="100" cy="100" r="90" fill="var(--poke-red)" clip-path="url(#clip-top)"/>
+  <!-- Bottom half (white) -->
+  <circle cx="100" cy="100" r="90" fill="var(--poke-white)" clip-path="url(#clip-bottom)"/>
+
+  <!-- Center black band -->
+  <rect x="10" y="95" width="180" height="10" fill="var(--poke-black)"/>
+
+  <!-- Button outer (white, with black stroke) -->
+  <circle cx="100" cy="100" r="24" fill="var(--poke-white)" stroke="var(--poke-black)" stroke-width="8"/>
+
+  <!-- Button inner (light gray) -->
+  <circle cx="100" cy="100" r="10" fill="#e0e0e0" stroke="var(--poke-black)" stroke-width="3"/>
+
+  <!-- Soft shine (optional) -->
+  <circle cx="100" cy="100" r="90" fill="url(#shine)" pointer-events="none"/>
+</svg>

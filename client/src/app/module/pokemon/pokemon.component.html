@@ -42,22 +42,35 @@
     (touchmove)="rotateTouch($event)"
     (touchend)="stopRotateTouch()"
     (touchcancel)="stopRotateTouch()"
-    [src]="'/assets/images/balls/pokeball.png'"
+    [src]="'/assets/images/balls/pokeball.svg'"
   />
 
-  <div #pokemonListEl class="poke-div">
-    <div
-      class="pokemon-list-card"
-      *ngFor="let pokemon of displayPokemonList"
-      (click)="selectPokemon(pokemon)"
-      [ngClass]="{
-        'selected-border': selectedPokemon?.id === pokemon.id
-      }"
-    >
-      <div class="pokemon-id poke-font">
-        {{ pokemon.id.toString().padStart(3, "0") }}
+  <div class="scroll-wrapper">
+    <div #pokemonListEl class="poke-div">
+      <div
+        class="pokemon-list-card"
+        *ngFor="let pokemon of displayPokemonList; let i = index"
+        (click)="selectPokemon(pokemon, i)"
+        [ngClass]="{
+          'selected-border': i === selectedIndex
+        }"
+      >
+        <div class="pokemon-id poke-font">
+          {{ pokemon.id.toString().padStart(3, "0") }}
+        </div>
+        <div class="pokemon-name poke-font">
+          {{ pokemon.name | capitalize }}
+        </div>
       </div>
-      <div class="pokemon-name poke-font">{{ pokemon.name | capitalize }}</div>
+    </div>
+
+    <div class="custom-scrollbar">
+      <div
+        class="scroll-thumb"
+        [style.top.%]="scrollThumbTop"
+        (mousedown)="startThumbDrag($event)"
+        (touchstart)="startThumbDrag($event)"
+      ></div>
     </div>
   </div>
 
